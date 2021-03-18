@@ -1,355 +1,541 @@
-/* ===========================================================
- * bootstrap-inputmask.js j2
- * http://twitter.github.com/bootstrap/javascript.html#tooltips
- * Based on Masked Input plugin by Josh Bush (digitalbush.com)
- * ===========================================================
- * Copyright 2012 Jasny BV, Netherlands.
+/**
+ * jquery.mask.js
+ * @version: v1.14.10
+ * @author: Igor Escobar
  *
- * Licensed under the Apache License, Version 2.0 (the "License")
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Created by Igor Escobar on 2012-03-10. Please report any bug at http://blog.igorescobar.com
  *
- * http://www.apache.org/licenses/LICENSE-2.0
+ * Copyright (c) 2012 Igor Escobar http://blog.igorescobar.com
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * ========================================================== */
+ * The MIT License (http://www.opensource.org/licenses/mit-license.php)
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
 
-!function ($) {
+/* jshint laxbreak: true */
+/* jshint maxcomplexity:17 */
+/* global define */
 
-  "use strict"; // jshint ;_;
+'use strict';
 
-  var isIphone = (window.orientation !== undefined),
-      isAndroid = navigator.userAgent.toLowerCase().indexOf("android") > -1
+// UMD (Universal Module Definition) patterns for JavaScript modules that work everywhere.
+// https://github.com/umdjs/umd/blob/master/jqueryPluginCommonjs.js
+(function (factory, jQuery, Zepto) {
 
+    if (typeof define === 'function' && define.amd) {
+        define(['jquery'], factory);
+    } else if (typeof exports === 'object') {
+        module.exports = factory(require('jquery'));
+    } else {
+        factory(jQuery || Zepto);
+    }
 
- /* INPUTMASK PUBLIC CLASS DEFINITION
-  * ================================= */
+}(function ($) {
 
-  var Inputmask = function (element, options) {
-    if (isAndroid) return // No support because caret positioning doesn't work on Android
-    
-    this.$element = $(element)
-    this.options = $.extend({}, $.fn.inputmask.defaults, options)
-    this.mask = String(options.mask)
-    
-    this.init()
-    this.listen()
-        
-    this.checkVal() //Perform initial check for existing values
-  }
+    var Mask = function (el, mask, options) {
 
-  Inputmask.prototype = {
-    
-    init: function() {
-      var defs = this.options.definitions
-      var len = this.mask.length
+        var p = {
+            invalid: [],
+            getCaret: function () {
+                try {
+                    var sel,
+                        pos = 0,
+                        ctrl = el.get(0),
+                        dSel = document.selection,
+                        cSelStart = ctrl.selectionStart;
 
-      this.tests = [] 
-      this.partialPosition = this.mask.length
-      this.firstNonMaskPos = null
+                    // IE Support
+                    if (dSel && navigator.appVersion.indexOf('MSIE 10') === -1) {
+                        sel = dSel.createRange();
+                        sel.moveStart('character', -p.val().length);
+                        pos = sel.text.length;
+                    }
+                    // Firefox support
+                    else if (cSelStart || cSelStart === '0') {
+                        pos = cSelStart;
+                    }
 
-      $.each(this.mask.split(""), $.proxy(function(i, c) {
-        if (c == '?') {
-          len--
-          this.partialPosition = i
-        } else if (defs[c]) {
-          this.tests.push(new RegExp(defs[c]))
-          if(this.firstNonMaskPos === null)
-            this.firstNonMaskPos =  this.tests.length - 1
-        } else {
-          this.tests.push(null)
-        }
-      }, this))
+                    return pos;
+                } catch (e) {}
+            },
+            setCaret: function(pos) {
+                try {
+                    if (el.is(':focus')) {
+                        var range, ctrl = el.get(0);
 
-      this.buffer = $.map(this.mask.split(""), $.proxy(function(c, i) {
-        if (c != '?') return defs[c] ? this.options.placeholder : c
-      }, this))
-      
-      this.focusText = this.$element.val()
+                        // Firefox, WebKit, etc..
+                        if (ctrl.setSelectionRange) {
+                            ctrl.setSelectionRange(pos, pos);
+                        } else { // IE
+                            range = ctrl.createTextRange();
+                            range.collapse(true);
+                            range.moveEnd('character', pos);
+                            range.moveStart('character', pos);
+                            range.select();
+                        }
+                    }
+                } catch (e) {}
+            },
+            events: function() {
+                el
+                .on('keydown.mask', function(e) {
+                    el.data('mask-keycode', e.keyCode || e.which);
+                    el.data('mask-previus-value', el.val());
+                })
+                .on($.jMaskGlobals.useInput ? 'input.mask' : 'keyup.mask', p.behaviour)
+                .on('paste.mask drop.mask', function() {
+                    setTimeout(function() {
+                        el.keydown().keyup();
+                    }, 100);
+                })
+                .on('change.mask', function(){
+                    el.data('changed', true);
+                })
+                .on('blur.mask', function(){
+                    if (oldValue !== p.val() && !el.data('changed')) {
+                        el.trigger('change');
+                    }
+                    el.data('changed', false);
+                })
+                // it's very important that this callback remains in this position
+                // otherwhise oldValue it's going to work buggy
+                .on('blur.mask', function() {
+                    oldValue = p.val();
+                })
+                // select all text on focus
+                .on('focus.mask', function (e) {
+                    if (options.selectOnFocus === true) {
+                        $(e.target).select();
+                    }
+                })
+                // clear the value if it not complete the mask
+                .on('focusout.mask', function() {
+                    if (options.clearIfNotMatch && !regexMask.test(p.val())) {
+                       p.val('');
+                   }
+                });
+            },
+            getRegexMask: function() {
+                var maskChunks = [], translation, pattern, optional, recursive, oRecursive, r;
 
-      this.$element.data("rawMaskFn", $.proxy(function() {
-        return $.map(this.buffer, function(c, i) {
-          return this.tests[i] && c != this.options.placeholder ? c : null
-        }).join('')
-      }, this))
-    },
-    
-    listen: function() {
-      if (this.$element.attr("readonly")) return
+                for (var i = 0; i < mask.length; i++) {
+                    translation = jMask.translation[mask.charAt(i)];
 
-      var pasteEventName = (navigator.userAgent.match(/msie/i) ? 'paste' : 'input') + ".mask"
+                    if (translation) {
 
-      this.$element
-        .on("unmask", $.proxy(this.unmask, this))
-        
-        .on("focus.mask", $.proxy(this.focusEvent, this))
-        .on("blur.mask", $.proxy(this.blurEvent, this))
-        
-        .on("keydown.mask", $.proxy(this.keydownEvent, this))
-        .on("keypress.mask", $.proxy(this.keypressEvent, this))
+                        pattern = translation.pattern.toString().replace(/.{1}$|^.{1}/g, '');
+                        optional = translation.optional;
+                        recursive = translation.recursive;
 
-        .on(pasteEventName, $.proxy(this.pasteEvent, this))
-    },
+                        if (recursive) {
+                            maskChunks.push(mask.charAt(i));
+                            oRecursive = {digit: mask.charAt(i), pattern: pattern};
+                        } else {
+                            maskChunks.push(!optional && !recursive ? pattern : (pattern + '?'));
+                        }
 
-    //Helper Function for Caret positioning
-    caret: function(begin, end) {
-      if (this.$element.length === 0) return
-      if (typeof begin == 'number') {
-        end = (typeof end == 'number') ? end : begin
-        return this.$element.each(function() {
-          if (this.setSelectionRange) {
-            this.setSelectionRange(begin, end)
-          } else if (this.createTextRange) {
-            var range = this.createTextRange()
-            range.collapse(true)
-            range.moveEnd('character', end)
-            range.moveStart('character', begin)
-            range.select()
-          }
-        })
-      } else {
-        if (this.$element[0].setSelectionRange) {
-          begin = this.$element[0].selectionStart
-          end = this.$element[0].selectionEnd
-        } else if (document.selection && document.selection.createRange) {
-          var range = document.selection.createRange()
-          begin = 0 - range.duplicate().moveStart('character', -100000)
-          end = begin + range.text.length
-        }
-        return {
-          begin: begin, 
-          end: end
-        }
-      }
-    },
-    
-    seekNext: function(pos) {
-      var len = this.mask.length
-      while (++pos <= len && !this.tests[pos]);
-      
-      return pos
-    },
-    
-    seekPrev: function(pos) {
-      while (--pos >= 0 && !this.tests[pos]);
-      
-      return pos
-    },
+                    } else {
+                        maskChunks.push(mask.charAt(i).replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'));
+                    }
+                }
 
-    shiftL: function(begin,end) {
-      var len = this.mask.length
-      
-      if(begin<0) return
-      
-      for (var i = begin,j = this.seekNext(end); i < len; i++) {
-        if (this.tests[i]) {
-          if (j < len && this.tests[i].test(this.buffer[j])) {
-            this.buffer[i] = this.buffer[j]
-            this.buffer[j] = this.options.placeholder
-          } else
-            break
-          j = this.seekNext(j)
-        }
-      }
-      this.writeBuffer()
-      this.caret(Math.max(this.firstNonMaskPos, begin))
-    },
+                r = maskChunks.join('');
 
-    shiftR: function(pos) {
-      var len = this.mask.length
-      
-      for (var i = pos, c = this.options.placeholder; i < len; i++) {
-        if (this.tests[i]) {
-          var j = this.seekNext(i)
-          var t = this.buffer[i]
-          this.buffer[i] = c
-          if (j < len && this.tests[j].test(t))
-            c = t
-          else
-            break
-        }
-      }
-    },
+                if (oRecursive) {
+                    r = r.replace(new RegExp('(' + oRecursive.digit + '(.*' + oRecursive.digit + ')?)'), '($1)?')
+                         .replace(new RegExp(oRecursive.digit, 'g'), oRecursive.pattern);
+                }
 
-    unmask: function() {
-      this.$element
-        .unbind(".mask")
-        .removeData("inputmask")
-    },
-    
-    focusEvent: function() {
-      this.focusText = this.$element.val()
-      var len = this.mask.length 
-      var pos = this.checkVal()
-      this.writeBuffer()
+                return new RegExp(r);
+            },
+            destroyEvents: function() {
+                el.off(['input', 'keydown', 'keyup', 'paste', 'drop', 'blur', 'focusout', ''].join('.mask '));
+            },
+            val: function(v) {
+                var isInput = el.is('input'),
+                    method = isInput ? 'val' : 'text',
+                    r;
 
-      var that = this
-      var moveCaret = function() {
-        if (pos == len)
-          that.caret(0, pos)
-        else
-          that.caret(pos)
-      }
+                if (arguments.length > 0) {
+                    if (el[method]() !== v) {
+                        el[method](v);
+                    }
+                    r = el;
+                } else {
+                    r = el[method]();
+                }
 
-      if (navigator.userAgent.match(/msie/i))
-        moveCaret()
-      else
-        setTimeout(moveCaret, 0)
-    },
-    
-    blurEvent: function() {
-      this.checkVal()
-      if (this.$element.val() != this.focusText)
-        this.$element.trigger('change')
-    },
-        
-    keydownEvent: function(e) {
-      var k=e.which
+                return r;
+            },
+            calculateCaretPosition: function(caretPos, newVal) {
+                var newValL = newVal.length,
+                    oValue  = el.data('mask-previus-value') || '',
+                    oValueL = oValue.length;
 
-      //backspace, delete, and escape get special treatment
-      if (k == 8 || k == 46 || (isIphone && k == 127)) {
-        var pos = this.caret(),
-        begin = pos.begin,
-        end = pos.end
-						
-        if (end-begin === 0) {
-          begin = k!=46 ? this.seekPrev(begin) : (end=this.seekNext(begin-1))
-          end = k==46 ? this.seekNext(end) : end
-        }
-        this.clearBuffer(begin, end)
-        this.shiftL(begin,end-1)
+                // edge cases when erasing digits
+                if (el.data('mask-keycode') === 8 && oValue !== newVal) {
+                    caretPos = caretPos - (newVal.slice(0, caretPos).length - oValue.slice(0, caretPos).length);
 
-        return false
-      } else if (k == 27) {//escape
-        this.$element.val(this.focusText)
-        this.caret(0, this.checkVal())
-        return false
-      }
-    },
+                // edge cases when typing new digits
+                } else if (oValue !== newVal) {
+                    // if the cursor is at the end keep it there
+                    if (caretPos >= oValueL) {
+                        caretPos = newValL;
+                    } else {
+                        caretPos = caretPos + (newVal.slice(0, caretPos).length - oValue.slice(0, caretPos).length);
+                    }
+                }
 
-    keypressEvent: function(e) {
-      var len = this.mask.length
-      
-      var k = e.which,
-      pos = this.caret()
+                return caretPos;
+            },
+            behaviour: function(e) {
+                e = e || window.event;
+                p.invalid = [];
 
-      if (e.ctrlKey || e.altKey || e.metaKey || k<32)  {//Ignore
-        return true
-      } else if (k) {
-        if (pos.end - pos.begin !== 0) {
-          this.clearBuffer(pos.begin, pos.end)
-          this.shiftL(pos.begin, pos.end-1)
-        }
+                var keyCode = el.data('mask-keycode');
 
-        var p = this.seekNext(pos.begin - 1)
-        if (p < len) {
-          var c = String.fromCharCode(k)
-          if (this.tests[p].test(c)) {
-            this.shiftR(p)
-            this.buffer[p] = c
-            this.writeBuffer()
-            var next = this.seekNext(p)
-            this.caret(next)
-          }
-        }
-        return false
-      }
-    },
+                if ($.inArray(keyCode, jMask.byPassKeys) === -1) {
+                    var newVal   = p.getMasked(),
+                        caretPos = p.getCaret();
 
-    pasteEvent: function() {
-      var that = this
-      
-      setTimeout(function() {
-        that.caret(that.checkVal(true))
-      }, 0)
-    },
-    
-    clearBuffer: function(start, end) {
-      var len = this.mask.length
-      
-      for (var i = start; i < end && i < len; i++) {
-        if (this.tests[i])
-          this.buffer[i] = this.options.placeholder
-      }
-    },
+                    setTimeout(function(caretPos, newVal) {
+                      p.setCaret(p.calculateCaretPosition(caretPos, newVal));
+                    }, 10, caretPos, newVal);
 
-    writeBuffer: function() {
-      return this.$element.val(this.buffer.join('')).val()
-    },
+                    p.val(newVal);
+                    p.setCaret(caretPos);
+                    return p.callbacks(e);
+                }
+            },
+            getMasked: function(skipMaskChars, val) {
+                var buf = [],
+                    value = val === undefined ? p.val() : val + '',
+                    m = 0, maskLen = mask.length,
+                    v = 0, valLen = value.length,
+                    offset = 1, addMethod = 'push',
+                    resetPos = -1,
+                    lastMaskChar,
+                    check;
 
-    checkVal: function(allow) {
-      var len = this.mask.length
-      //try to place characters where they belong
-      var test = this.$element.val()
-      var lastMatch = -1
-      
-      for (var i = 0, pos = 0; i < len; i++) {
-        if (this.tests[i]) {
-          this.buffer[i] = this.options.placeholder
-          while (pos++ < test.length) {
-            var c = test.charAt(pos - 1)
-            if (this.tests[i].test(c)) {
-              this.buffer[i] = c
-              lastMatch = i
-              break
+                if (options.reverse) {
+                    addMethod = 'unshift';
+                    offset = -1;
+                    lastMaskChar = 0;
+                    m = maskLen - 1;
+                    v = valLen - 1;
+                    check = function () {
+                        return m > -1 && v > -1;
+                    };
+                } else {
+                    lastMaskChar = maskLen - 1;
+                    check = function () {
+                        return m < maskLen && v < valLen;
+                    };
+                }
+
+                var lastUntranslatedMaskChar;
+                while (check()) {
+                    var maskDigit = mask.charAt(m),
+                        valDigit = value.charAt(v),
+                        translation = jMask.translation[maskDigit];
+
+                    if (translation) {
+                        if (valDigit.match(translation.pattern)) {
+                            buf[addMethod](valDigit);
+                             if (translation.recursive) {
+                                if (resetPos === -1) {
+                                    resetPos = m;
+                                } else if (m === lastMaskChar) {
+                                    m = resetPos - offset;
+                                }
+
+                                if (lastMaskChar === resetPos) {
+                                    m -= offset;
+                                }
+                            }
+                            m += offset;
+                        } else if (valDigit === lastUntranslatedMaskChar) {
+                            // matched the last untranslated (raw) mask character that we encountered
+                            // likely an insert offset the mask character from the last entry; fall
+                            // through and only increment v
+                            lastUntranslatedMaskChar = undefined;
+                        } else if (translation.optional) {
+                            m += offset;
+                            v -= offset;
+                        } else if (translation.fallback) {
+                            buf[addMethod](translation.fallback);
+                            m += offset;
+                            v -= offset;
+                        } else {
+                          p.invalid.push({p: v, v: valDigit, e: translation.pattern});
+                        }
+                        v += offset;
+                    } else {
+                        if (!skipMaskChars) {
+                            buf[addMethod](maskDigit);
+                        }
+
+                        if (valDigit === maskDigit) {
+                            v += offset;
+                        } else {
+                            lastUntranslatedMaskChar = maskDigit;
+                        }
+
+                        m += offset;
+                    }
+                }
+
+                var lastMaskCharDigit = mask.charAt(lastMaskChar);
+                if (maskLen === valLen + 1 && !jMask.translation[lastMaskCharDigit]) {
+                    buf.push(lastMaskCharDigit);
+                }
+
+                return buf.join('');
+            },
+            callbacks: function (e) {
+                var val = p.val(),
+                    changed = val !== oldValue,
+                    defaultArgs = [val, e, el, options],
+                    callback = function(name, criteria, args) {
+                        if (typeof options[name] === 'function' && criteria) {
+                            options[name].apply(this, args);
+                        }
+                    };
+
+                callback('onChange', changed === true, defaultArgs);
+                callback('onKeyPress', changed === true, defaultArgs);
+                callback('onComplete', val.length === mask.length, defaultArgs);
+                callback('onInvalid', p.invalid.length > 0, [val, e, el, p.invalid, options]);
             }
-          }
-          if (pos > test.length)
-            break
-        } else if (this.buffer[i] == test.charAt(pos) && i != this.partialPosition) {
-          pos++
-          lastMatch = i
+        };
+
+        el = $(el);
+        var jMask = this, oldValue = p.val(), regexMask;
+
+        mask = typeof mask === 'function' ? mask(p.val(), undefined, el,  options) : mask;
+
+        // public methods
+        jMask.mask = mask;
+        jMask.options = options;
+        jMask.remove = function() {
+            var caret = p.getCaret();
+            p.destroyEvents();
+            p.val(jMask.getCleanVal());
+            p.setCaret(caret);
+            return el;
+        };
+
+        // get value without mask
+        jMask.getCleanVal = function() {
+           return p.getMasked(true);
+        };
+
+        // get masked value without the value being in the input or element
+        jMask.getMaskedVal = function(val) {
+           return p.getMasked(false, val);
+        };
+
+       jMask.init = function(onlyMask) {
+            onlyMask = onlyMask || false;
+            options = options || {};
+
+            jMask.clearIfNotMatch  = $.jMaskGlobals.clearIfNotMatch;
+            jMask.byPassKeys       = $.jMaskGlobals.byPassKeys;
+            jMask.translation      = $.extend({}, $.jMaskGlobals.translation, options.translation);
+
+            jMask = $.extend(true, {}, jMask, options);
+
+            regexMask = p.getRegexMask();
+
+            if (onlyMask) {
+                p.events();
+                p.val(p.getMasked());
+            } else {
+                if (options.placeholder) {
+                    el.attr('placeholder' , options.placeholder);
+                }
+
+                // this is necessary, otherwise if the user submit the form
+                // and then press the "back" button, the autocomplete will erase
+                // the data. Works fine on IE9+, FF, Opera, Safari.
+                if (el.data('mask')) {
+                  el.attr('autocomplete', 'off');
+                }
+
+                // detect if is necessary let the user type freely.
+                // for is a lot faster than forEach.
+                for (var i = 0, maxlength = true; i < mask.length; i++) {
+                    var translation = jMask.translation[mask.charAt(i)];
+                    if (translation && translation.recursive) {
+                        maxlength = false;
+                        break;
+                    }
+                }
+
+                if (maxlength) {
+                    el.attr('maxlength', mask.length);
+                }
+
+                p.destroyEvents();
+                p.events();
+
+                var caret = p.getCaret();
+                p.val(p.getMasked());
+                p.setCaret(caret);
+            }
+        };
+
+        jMask.init(!el.is('input'));
+    };
+
+    $.maskWatchers = {};
+    var HTMLAttributes = function () {
+        var input = $(this),
+            options = {},
+            prefix = 'data-mask-',
+            mask = input.attr('data-mask');
+
+        if (input.attr(prefix + 'reverse')) {
+            options.reverse = true;
         }
-      }
-      if (!allow && lastMatch + 1 < this.partialPosition) {
-        this.$element.val("")
-        this.clearBuffer(0, len)
-      } else if (allow || lastMatch + 1 >= this.partialPosition) {
-        this.writeBuffer()
-        if (!allow) this.$element.val(this.$element.val().substring(0, lastMatch + 1))
-      }
-      return (this.partialPosition ? i : this.firstNonMaskPos)
+
+        if (input.attr(prefix + 'clearifnotmatch')) {
+            options.clearIfNotMatch = true;
+        }
+
+        if (input.attr(prefix + 'selectonfocus') === 'true') {
+           options.selectOnFocus = true;
+        }
+
+        if (notSameMaskObject(input, mask, options)) {
+            return input.data('mask', new Mask(this, mask, options));
+        }
+    },
+    notSameMaskObject = function(field, mask, options) {
+        options = options || {};
+        var maskObject = $(field).data('mask'),
+            stringify = JSON.stringify,
+            value = $(field).val() || $(field).text();
+        try {
+            if (typeof mask === 'function') {
+                mask = mask(value);
+            }
+            return typeof maskObject !== 'object' || stringify(maskObject.options) !== stringify(options) || maskObject.mask !== mask;
+        } catch (e) {}
+    },
+    eventSupported = function(eventName) {
+        var el = document.createElement('div'), isSupported;
+
+        eventName = 'on' + eventName;
+        isSupported = (eventName in el);
+
+        if ( !isSupported ) {
+            el.setAttribute(eventName, 'return;');
+            isSupported = typeof el[eventName] === 'function';
+        }
+        el = null;
+
+        return isSupported;
+    };
+
+    $.fn.mask = function(mask, options) {
+        options = options || {};
+        var selector = this.selector,
+            globals = $.jMaskGlobals,
+            interval = globals.watchInterval,
+            watchInputs = options.watchInputs || globals.watchInputs,
+            maskFunction = function() {
+                if (notSameMaskObject(this, mask, options)) {
+                    return $(this).data('mask', new Mask(this, mask, options));
+                }
+            };
+
+        $(this).each(maskFunction);
+
+        if (selector && selector !== '' && watchInputs) {
+            clearInterval($.maskWatchers[selector]);
+            $.maskWatchers[selector] = setInterval(function(){
+                $(document).find(selector).each(maskFunction);
+            }, interval);
+        }
+        return this;
+    };
+
+    $.fn.masked = function(val) {
+        return this.data('mask').getMaskedVal(val);
+    };
+
+    $.fn.unmask = function() {
+        clearInterval($.maskWatchers[this.selector]);
+        delete $.maskWatchers[this.selector];
+        return this.each(function() {
+            var dataMask = $(this).data('mask');
+            if (dataMask) {
+                dataMask.remove().removeData('mask');
+            }
+        });
+    };
+
+    $.fn.cleanVal = function() {
+        return this.data('mask').getCleanVal();
+    };
+
+    $.applyDataMask = function(selector) {
+        selector = selector || $.jMaskGlobals.maskElements;
+        var $selector = (selector instanceof $) ? selector : $(selector);
+        $selector.filter($.jMaskGlobals.dataMaskAttr).each(HTMLAttributes);
+    };
+
+    var globals = {
+        maskElements: 'input,td,span,div',
+        dataMaskAttr: '*[data-mask]',
+        dataMask: true,
+        watchInterval: 300,
+        watchInputs: true,
+        // old versions of chrome dont work great with input event
+        useInput: !/Chrome\/[2-4][0-9]|SamsungBrowser/.test(window.navigator.userAgent) && eventSupported('input'),
+        watchDataMask: false,
+        byPassKeys: [9, 16, 17, 18, 36, 37, 38, 39, 40, 91],
+        translation: {
+            '0': {pattern: /\d/},
+            '9': {pattern: /\d/, optional: true},
+            '#': {pattern: /\d/, recursive: true},
+            'A': {pattern: /[a-zA-Z0-9]/},
+            'S': {pattern: /[a-zA-Z]/}
+        }
+    };
+
+    $.jMaskGlobals = $.jMaskGlobals || {};
+    globals = $.jMaskGlobals = $.extend(true, {}, globals, $.jMaskGlobals);
+
+    // looking for inputs with data-mask attribute
+    if (globals.dataMask) {
+        $.applyDataMask();
     }
-  }
 
-  
- /* INPUTMASK PLUGIN DEFINITION
-  * =========================== */
+    setInterval(function() {
+        if ($.jMaskGlobals.watchDataMask) {
+            $.applyDataMask();
+        }
+    }, globals.watchInterval);
+}, window.jQuery, window.Zepto));
 
-  $.fn.inputmask = function (options) {
-    return this.each(function () {
-      var $this = $(this)
-      , data = $this.data('inputmask')
-      if (!data) $this.data('inputmask', (data = new Inputmask(this, options)))
-    })
-  }
-
-  $.fn.inputmask.defaults = {
-    mask: "",
-    placeholder: "_",
-    definitions: {
-      '9': "[0-9]",
-      'a': "[A-Za-z]",
-      '?': "[A-Za-z0-9]",
-      '*': "."
-    }
-  }
-
-  $.fn.inputmask.Constructor = Inputmask
-
-
- /* INPUTMASK DATA-API
-  * ================== */
-
-  $(document).on('focus.inputmask.data-api', '[data-mask]', function (e) {
-    var $this = $(this)
-    if ($this.data('inputmask')) return
-    e.preventDefault()
-    $this.inputmask($this.data())
-  })
-
-}(window.jQuery);

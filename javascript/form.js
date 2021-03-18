@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-
-$('[name=tamanho]').on('input', function(){
-    $('[name=valortamanho]').val(this.value);
-});
+$(document).ready(function($){
+    $('#sala').mask("999");
+    
+})

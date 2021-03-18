@@ -4,10 +4,9 @@
         <title>Entrar</title>
         <meta charset="utf-8"> 
         <meta name="viewport" content="width=device-widh">
-        <link href="../css/reset.css" rel="stylesheet" type="text/css"/>
-        <link href="../css/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="css/Login.css" rel="stylesheet" type="text/css"/> 
-        <link rel="icon" type="image/ico" href="../imagens/icone.ico">
+        <link rel="icon" type="image/ico" href="imagens/icone.ico">
         
         <script>
             <!-- hide on
@@ -36,7 +35,7 @@
 </header>
     <div class="container">
         <div class="row">
-            <form method="POST" action="php/login.php" class="col-lg-6 login">
+            <form method="POST" action="php/login.php" class="col-lg-6 col-md-6  login">
                 <fieldset>
                     <legend><b>Entre com sua conta ou acesse os links abaixo.</b></legend>
                     <label for="login">Login</label>
@@ -52,20 +51,20 @@
     </form>
             </div>
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-6 col-md-6 ">
             <a href="Form_de_Estrutura.php"><button type="button" class="btn btn-default navbar-btn infraestrutura">
             Problemas de infraestrutura clique aqui</button></a>
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-6">
+            <div class="col-lg-6 col-md-6 ">
                 <a href="Form_Ouvidoria.php"><button type="button" class="btn btn-default navbar-btn sugestoes">
             Sugestões, reclamações ou elogios clique aqui</button></a>  
             </div>
         </div>
         <div class="row">
             <form method="get" action="estado/Estado.php" target="Estado" onSubmit="window.open('', 'Estado', 'toolbar=0,location=0,status=0,menubar=0,scrollbars=0,resizable=1,width=1200,height=600');">
-            <div class="col-lg-6">
+            <div class="col-lg-6 col-md-6 ">
             
                 <label for="protocolo">Protocolo:</label>
                 <input type="text" class="form-control" id="protocolo" 

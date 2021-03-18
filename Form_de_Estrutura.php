@@ -4,7 +4,7 @@ include 'php/cabecalho.php';
 ?>
 <section class="formulario container">
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-12 col-md-8" id="form">
             <form action="php/Envio.php" method="POST" class="estrutura">
                 <fieldset>
                     <legend><b>Diga-nos qual o problema:</b></legend>
@@ -52,7 +52,7 @@ include 'php/cabecalho.php';
                         <option>Falta água</option>
                     </select>
                     <div class="row">
-                        <div class="col-lg-6">
+                        <div class="col-lg-6 col-md-6 ">
                             <p><label>Caso seja o banheiro</label></p>
                             <label>Gênero:</label>
                             <p><label>Masculino</label>
@@ -79,7 +79,7 @@ include 'php/cabecalho.php';
                             <input type="radio" class="form-check-input" id="lado"
                                       name="lado" value="Esquerdo"></p>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-lg-6 col-md-6 ">
                             <p><label>Caso seja uma sala</label></p>
                             <label>Sala</label>
                             <div class="row">
@@ -109,20 +109,20 @@ include 'php/cabecalho.php';
                     <input type="hidden" name="tipo" value="estrutura">
                 </fieldset>
                 <div class="row">
-                    <div class="col-lg-2"></div>
-                    <div class="col-lg-1">
+                    <div class="col-lg-2 col-md-2"></div>
+                    <div class="col-lg-1 col-md-1">
                         <button type="submit" name="Ok" value="Ok" class="btn btn-default navbar-btn">
                             Ok
                         </button>
                     </div>
-                    <div class="col-lg-2"></div>
-                    <div class="col-lg-1">
+                    <div class="col-lg-2 col-md-2"></div>
+                    <div class="col-lg-1 col-md-1">
                         <button type="reset" class="btn btn-default navbar-btn">
                             Limpar
                         </button>
                     </div>
-                    <div class="col-lg-2"></div>
-                    <div class="col-lg-2">
+                    <div class="col-lg-2 col-md-2"></div>
+                    <div class="col-lg-2 col-md-1">
                         <a href="index.php"><button type="button" class="btn btn-default navbar-btn">
                             Voltar
                         </button></a>
