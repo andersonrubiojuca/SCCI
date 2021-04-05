@@ -15,6 +15,8 @@ $tipo = $_GET['tipo'];
     
     $sqlp = mysqli_query($conn, "SELECT * FROM `estrutura` WHERE `andamento` = ".$tipo);
     $sql = mysqli_fetch_array($sqlp);
+
+    $protocolo = $sql['protocolo'];
     
 ?>
 <section class="verificar container">
@@ -46,7 +48,9 @@ $tipo = $_GET['tipo'];
         echo '<td>' . $sql['nome'] . '</td>';
         echo '<td>' . $sql['problema'] . '</td>';
         echo '<td>' . $sql['protocolo'] . '</td>';
-        echo '<td><a href="Estado.php?protocolo='.$sql['protocolo'].'" target="_blank"><button type="button"><span class="glyphicon glyphicon-edit"></span></button></a></td>';
+        echo <<<EOT
+            <td><a href="#" onClick="window.open('Estado.php?protocolo=$protocolo', 'Estado', 'STATUS=NO, TOOLBAR=NO, LOCATION=NO, DIRECTORIES=NO, RESISABLE=NO, SCROLLBARS=YES, TOP=10, LEFT=10, WIDTH=770, HEIGHT=400')"><button type="button"><span class="glyphicon glyphicon-edit"></span></button></a></td>
+        EOT;
         echo '</tr>';
     
            
@@ -55,7 +59,9 @@ $tipo = $_GET['tipo'];
         echo '<td>' . $sql['nome'] . '</td>';
         echo '<td>' . $sql['problema'] . '</td>';
         echo '<td>' . $sql['protocolo'] . '</td>';
-        echo '<td><a href="Estado.php?protocolo='.$sql['protocolo'].'" target="_blank"><button type="button"><span class="glyphicon glyphicon-edit"></span></button></a></td>';
+        echo <<<EOT
+            <td><a href="#" onClick="window.open('Estado.php?protocolo=$protocolo', 'Estado', 'STATUS=NO, TOOLBAR=NO, LOCATION=NO, DIRECTORIES=NO, RESISABLE=NO, SCROLLBARS=YES, TOP=10, LEFT=10, WIDTH=770, HEIGHT=400')"><button type="button"><span class="glyphicon glyphicon-edit"></span></button></a></td>
+        EOT;
         echo '</tr>';
     }
     
@@ -67,4 +73,4 @@ $tipo = $_GET['tipo'];
     
 </section>
 <?php
-include '../php/Rodape.php';
+include_once '../php/rodape-adm.php';

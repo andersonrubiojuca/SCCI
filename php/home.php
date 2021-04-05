@@ -18,4 +18,4 @@ and open the template in the editor.
 </div>
 </div>
 <?php        
-include 'Rodape.php';
+include_once '../php/rodape-adm.php';

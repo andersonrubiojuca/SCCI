@@ -1,4 +1,5 @@
 <!--<footer class="container">-->
+
 <footer>
 <script src="javascript/jquery.js" type="text/javascript"></script>
 <script src="javascript/inputmask-plugin.js" type="text/javascript"></script>

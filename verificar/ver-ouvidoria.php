@@ -16,11 +16,12 @@ $tipo = $_GET['tipo'];
     $sql = mysqli_fetch_array($sqlp);
     
     $max = 20;
+    $protocolo = $sql['protocolo'];
     
     
 ?>
 <section class="verificar container">
-    <h2>Lista de problemas de estrutura:</h2>
+    <h2>Lista de Sugestões, Reclamações e elogios:</h2>
     <p></p>
     
     <a href="ver-ouvidoria.php?tipo=3"><button type="button" class="btn btn-default navbar-btn">
@@ -48,7 +49,9 @@ $tipo = $_GET['tipo'];
         echo '<td>' . $sql['nome'] . '</td>';
         echo '<td>' . $sql['protocolo'] . '</td>';
         echo '<td>' . substr_replace($sql['conteudo'], (strlen($sql['conteudo']) > $max ?'...':''), $max) . '</td>';
-        echo '<td><a href="Estado.php?protocolo='.$sql['protocolo'].'" target="_blank"><button type="button"><span class="glyphicon glyphicon-edit"></span></button></a></td>';
+        echo <<<EOT
+            <td><a href="#" onClick="window.open('Estado.php?protocolo=$protocolo', 'Estado', 'STATUS=NO, TOOLBAR=NO, LOCATION=NO, DIRECTORIES=NO, RESISABLE=NO, SCROLLBARS=YES, TOP=10, LEFT=10, WIDTH=770, HEIGHT=400')"><button type="button"><span class="glyphicon glyphicon-edit"></span></button></a></td>
+        EOT;
         echo '</tr>';
     
            
@@ -57,7 +60,9 @@ $tipo = $_GET['tipo'];
         echo '<td>' . $sql['nome'] . '</td>';
         echo '<td>' . $sql['protocolo'] . '</td>';
         echo '<td>' . substr_replace($sql['conteudo'], (strlen($sql['conteudo']) > $max ?'...':''), $max) . '</td>';
-        echo '<td><a href="Estado.php?protocolo='.$sql['protocolo'].'" target="_blank"><button type="button"><span class="glyphicon glyphicon-edit"></span></button></a></td>';
+        echo <<<EOT
+            <td><a href="#" onClick="window.open('Estado.php?protocolo=$protocolo', 'Estado', 'STATUS=NO, TOOLBAR=NO, LOCATION=NO, DIRECTORIES=NO, RESISABLE=NO, SCROLLBARS=YES, TOP=10, LEFT=10, WIDTH=770, HEIGHT=400')"><button type="button"><span class="glyphicon glyphicon-edit"></span></button></a></td>
+        EOT;
         echo '</tr>';
     }
     
@@ -69,4 +74,4 @@ $tipo = $_GET['tipo'];
     
 </section>
 <?php
-include '../php/Rodape.php';
+include_once '../php/rodape-adm.php';

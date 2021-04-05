@@ -147,7 +147,7 @@
                         <div class="row">
                             <div class="col-lg-3"></div>
                             <div class="col-lg-2">
-                                <input type="submit" id="Enviar" value="Enviar" name="action" class="btn btn-default navbar-btn">
+                                <input type="submit" id="Alterar" value="Alterar" name="action" class="btn btn-default navbar-btn">
                             </div>
                             <div class="col-lg-2">
                                 <button type="button" class="btn btn-default navbar-btn" onclick="window.close()">

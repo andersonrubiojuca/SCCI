@@ -4,10 +4,10 @@
         <title><?php print $cabecalho_title;?></title>
         <meta charset="utf-8"> 
         <meta name="viewport" content="width=device-widh">
-        <link href="../css/reset.css" rel="stylesheet" type="text/css">
         <link href="../css/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="../css/padrao.min.css">
         <link rel="icon" type="image/ico" href="../imagens/icone.ico">
+        
         <?php print @$cabecalho_css; 
         print @$cabecalho_algomais;
         if(!isset($_SESSION)) {

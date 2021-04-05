@@ -80,4 +80,4 @@ $dados = $_SESSION;
         </script>
 </section>
 <?php
-include 'Rodape.php';
+include_once '../php/rodape-adm.php';
