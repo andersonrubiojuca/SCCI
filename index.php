@@ -5,19 +5,9 @@
         <meta charset="utf-8"> 
         <meta name="viewport" content="width=device-widh">
         <link href="css/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
-        <link href="css/Login.css" rel="stylesheet" type="text/css"/> 
+        <link href="css/login.css" rel="stylesheet" type="text/css"/> 
         <link rel="icon" type="image/ico" href="imagens/icone.ico">
         
-        <script>
-            <!-- hide on
-
-            function popup(popupfile,winheight,winwidth)
-            {
-            open(popupfile,"PopupWindow","resizable=no,height=" + winheight + ",width=" + winwidth + ",scrollbars=no");
-            }
-
-            // hide off -->
-        </script>
         
         <?php
             if(isset($_SESSION['login'])){
@@ -29,9 +19,7 @@
     <div class="fundo">
     </div>
     <header>
-        <video autoplay loop poster="imagens/video_tt.mp4" class="bg_video">
-            <source src="imagens/video_tt.mp4" type="video/mp4">
-      </video>
+        <img class="fundo-img"src="imagens/door.jpg" alt="">
 </header>
     <div class="container">
         <div class="row">

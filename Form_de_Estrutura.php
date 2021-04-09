@@ -11,102 +11,16 @@ include 'php/cabecalho.php';
                     <label for="nome">Nome <span style="color: red; font-size: 70%;">(opcional)</span></label>
                     <input type="text" class="form-control" id="nome" 
                            name="nome">
-                    <label for="local">Local</label>
+                    <label for="local">Ala*</label>
                     <select name="local" class="form-control">
-                        <option>Biblioteca</option>
-                        <option>Cantina</option>
-                        <option>CDA</option>
-                        <option>Direção</option>
-                        <option>Gestão de Crédito</option>
-                        <option>Lab. Redes</option>
-                        <option>Lab II</option>
-                        <option>Lab III</option>
-                        <option>Banheiro (Especificar abaixo)</option>
-                        <option>Sala de Aula (Especificar abaixo)</option>
-                        <option>Corredor (Especificar abaixo)</option>
+                        <option>Outros</option>
                     </select>
-                    <label for="tipo-de-problema">Problema</label>
-                    <select name="problema" class="form-control">
-                        <option>Ar condicionado não funciona</option>
-                        <option>Cadeira quebrada</option>
-                        <option>Lâmpada queimada</option>
-                        <option>Quadro arranhado</option>
-                        <option>Tomada não funciona</option>
-                        <option>Janela quebrada</option>
-                        <option>Cadeira suja</option>
-                        <option>Cadeira em qtde insuficiente</option>
-                        <option>Equipamento audio/visual não funciona</option>
-                        <option>Quadro sujo</option>
-                        <option>Sala suja</option>
-                        <option>Sala desorganizada</option>
-                        <option>"Escada com ploblema</option>
-                        <option>Escada escorregando</option>
-                        <option>Escada suja</option>
-                        <option>Rampa suja</option>
-                        <option>Rampa com problema de iluminação</option>
-                        <option>Banheiro sujo"</option>
-                        <option>Vaso entupido"</option>
-                        <option>Descarga vazando</option>
-                        <option>Falta de material de higiene no banheiro (Especificar abaixo)</option>
-                        <option>Torneira quebrada</option>
-                        <option>Falta água</option>
-                    </select>
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 ">
-                            <p><label>Caso seja o banheiro</label></p>
-                            <label>Gênero:</label>
-                            <p><label>Masculino</label>
-                            <input type="radio" class="form-check-input" id="sexo"
-                                   name="sexo" value="Masculino">
-                            <label>Feminino</label>
-                            <input type="radio" class="form-check-input" id="sexo"
-                                   name="sexo" value="Feminino"></p>
-                            <label>Local</label>
-                            <select name="ban_local" class="form-check-input">
-                                <option></option>
-                                <option>Terreo</option>
-                                <option>1 Andar</option>
-                                <option>2 Andar</option>
-                                <option>3 Andar</option>
-                                <option>Anexo</option>
-                                <option>Cantina</option>
-                            </select>
-                            <label>Lado:</label>
-                            <p><label>Direito</label>
-                            <input type="radio" class="form-check-input" id="lado"
-                                      name="lado" value="Direito">
-                            <label>Esquerdo</label>
-                            <input type="radio" class="form-check-input" id="lado"
-                                      name="lado" value="Esquerdo"></p>
-                        </div>
-                        <div class="col-lg-6 col-md-6 ">
-                            <p><label>Caso seja uma sala</label></p>
-                            <label>Sala</label>
-                            <div class="row">
-                                <div class="col-lg-2">
-                                    <input type="text" id="sala" class="form-control" name="sala"
-                                           placeholder="000" data-mask="999">
-                                </div>
-                            </div>
-                            <label>Corredor:</label>
-                            <select name="sala_corredor" class="form-check-input">
-                                <option></option>
-                                <option>Terreo</option>
-                                <option>1 Andar</option>
-                                <option>2 Andar</option>
-                                <option>3 Andar</option>
-                                <option>Anexo</option>
-                            </select>
-                            <p><label>Tipo de Material de Higiene</label></p>
-                            <p><input class="form-check-input" type="checkbox" id="Sabonetelíquido"
-                                      value="Sabonete líquido" name="Sabonetelíquido">Sabonete líquido</p>
-                            <p><input class="form-check-input" type="checkbox" id="PapelHigiênico"
-                                      value="Papel Higiênico" name="PapelHigiênico">Papel Higiênico</p>
-                            <p><input class="form-check-input" type="checkbox" id="Papeltoalha"
-                                      value="Papel toalha" name="Papeltoalha">Papel toalha</p>
-                        </div>
-                    </div>
+                    <label for="sala">Em qual sala*</label>
+                    <input type="text" class="form-control" name="sala" id="sala">
+                    <label for="problema">Diga-nos qual o problema*</label>
+                        <textarea name="problema" id="problema" class="form-control" cols="30" rows="10"></textarea>
                     <input type="hidden" name="tipo" value="estrutura">
+                <span class="pequeno">* - Campos Obrigatórios</span>
                 </fieldset>
                 <div class="row">
                     <div class="col-lg-2 col-md-2"></div>

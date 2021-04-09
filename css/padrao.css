@@ -92,3 +92,8 @@ footer {
 table tr td {
   border: 1px #000 solid;
 }
+
+.pequeno {
+  font-size: 10px;
+  color:red;
+}

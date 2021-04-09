@@ -5,7 +5,7 @@ and open the template in the editor.
 */
 /* 
     Created on : 09/09/2016, 21:09:19
-    Author     : Administrador
+    Author     : Anderson Juca
 */
 
 body{
@@ -22,8 +22,7 @@ legend{
 }
 
 
-
-.bg_video{
+.fundo-img{
   position: fixed;
   top: 0; 
   left: 0;
@@ -33,6 +32,10 @@ legend{
   height: auto;
   background-size: auto;
   z-index: -1000;
+}
+
+body .container{
+    width: 200%;
 }
 
 .fundo{
@@ -97,5 +100,13 @@ legend{
     body{
         left: 0;
         top: 5%;
+
+        width: 50%;
+    }
+}
+
+@media(max-width: 1024px){
+    body .container{
+        width: 149%;
     }
 }
