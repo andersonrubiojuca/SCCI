@@ -12,7 +12,7 @@
     <header class="container">
         <div class="row">
             <div class="col-lg-12">
-            <h1><img src="imagens/Logo Rede.jpg" alt="Doctum"/></h1> 
+            <h1><img src="imagens/logo.png" alt="Oswaldo Aranha"/></h1> 
             <p></p>
             </div>
             </div>
