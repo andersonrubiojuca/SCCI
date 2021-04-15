@@ -5,7 +5,10 @@ class Estrutura{
     private String $nome,
         $local,
         $sala,
-        $problema;
+        $problema,
+        $protocolo,
+        $retorno,
+        $andamento;
     
     // eu nao gosto de forçar um objeto a ter todos os atributos,
     // já que o php não aguenta sobrecarga; entao eu uso o invoke
@@ -18,6 +21,13 @@ class Estrutura{
         $this->local = $dados['local'];
         $this->sala = $dados['sala'];
         $this->problema = $sala['problema'];
+
+        if(isset($dados['protocolo']))
+            $this->protocolo = $dados['protocolo'];
+        if(isset($dados['retorno']))
+            $this->retorno = $dados['retorno'];
+        if(isset($dados['andamento']))
+            $this->andamento = $dados['andamento'];
     }
 
     public function setId (int $id){
@@ -49,5 +59,23 @@ class Estrutura{
     }
     public function getProblema(){
         return $this->problema;
+    }
+    public function setProtocolo (String $protocolo){
+        $this->protocolo = $protocolo;
+    }
+    public function getProtocolo(){
+        return $this->protocolo;
+    }
+    public function setRetorno (String $retorno){
+        $this->retorno = $retorno;
+    }
+    public function getRetorno(){
+        return $this->retorno;
+    }
+    public function setAndamento (String $andamento){
+        $this->andamento = $andamento;
+    }
+    public function getAndamento(){
+        return $this->andamento;
     }
 }
