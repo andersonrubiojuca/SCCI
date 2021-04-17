@@ -11,9 +11,11 @@ include 'php/cabecalho.php';
                     <label for="nome">Nome <span style="color: red; font-size: 70%;">(opcional)</span></label>
                     <input type="text" class="form-control" id="nome" 
                            name="nome">
-                    <label for="local">Ala*</label>
+                    <label for="local">Setor</label>
                     <select name="local" class="form-control">
-                        <option>Outros</option>
+                        <option>Consultório</option>
+                        <option>Internação</option>
+                        <option>Pronto Socorro</option>
                     </select>
                     <label for="sala">Em qual sala*</label>
                     <input type="text" class="form-control" name="sala" id="sala">
