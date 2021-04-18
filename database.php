@@ -7,5 +7,6 @@
 $db = [
     "endereco" => "127.0.0.1",
     "login" => "admin",
-    "senha" => ""
+    "senha" => "",
+    "banco" => "feedback"
 ];
