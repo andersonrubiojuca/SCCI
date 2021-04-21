@@ -52,6 +52,14 @@ class EstruturaDAO{
         return $dados;
     }
 
+    public function procurarProtocolo(int $prot){
+        $sql = "SELECT * FROM chamados WHERE protocolo = " . $prot . ";";
+
+        $dados = $this->conn($sql);
+
+        return $dados;
+    }
+
     public function remover(int $id){
         $sql = "DELETE FROM estrutura WHERE id = " . $id . ";";
 
