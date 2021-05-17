@@ -1,10 +1,10 @@
 <?php
 
 class Estrutura{
-    private int $id;
+    private int $id,
+        $sala;
     private String $nome,
         $local,
-        $sala,
         $problema,
         $protocolo,
         $retorno,
@@ -18,9 +18,9 @@ class Estrutura{
             $this->id = $dados['id'];
 
         $this->nome = $dados['nome'];
-        $this->local = $dados['local'];
+        $this->local = $dados['setor'];
         $this->sala = $dados['sala'];
-        $this->problema = $sala['problema'];
+        $this->problema = $dados['problema'];
 
         if(isset($dados['protocolo']))
             $this->protocolo = $dados['protocolo'];
