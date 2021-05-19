@@ -1,13 +1,23 @@
 
         <?php
+        require_once("../php/dao/estruturaDAO.php");
+        require_once("../php/model/estrutura.php");
 
-        $dados = $_GET;
-        $protocolo = $dados['protocolo'];
+        $protocolo = $_GET['protocolo'];
         
-        $conn = mysqli_connect("127.0.0.1", "root", "", "feedback");
+        $estrudao = new EstruturaDAO();
+
+        $dados = $estrudao->procurarProtocolo($protocolo);
+
+        if($dados){
+            echo "tem sim <br>";
+            $oi = mysqli_fetch_array($dados);
+            echo $oi["sala"];
+        } else{
+            echo "tem nao";
+        }
         
-        $autenticacao = substr((string)$dados['protocolo'],0,1);
-        
+        /*
         if($autenticacao == 1){
             $sql = mysqli_query($conn, "SELECT * FROM `estrutura` WHERE `protocolo` = '" . $protocolo . "'");
             if ($sql){
@@ -27,3 +37,4 @@
         } else {
             echo"<script language='javascript' type='text/javascript'>alert('protocolo incorreto!');window.close();</script>";
         }
+        */

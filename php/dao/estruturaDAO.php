@@ -1,18 +1,10 @@
 <?php
     include_once("../database.php");
+    require_once("DAO.php");
 
 class EstruturaDAO{
-
-    private $banco;
-
-    public function __construct(){
-        $this->banco = Database::$db;
-    }
+    use DAO;
     
-    private function conn(String $sql){
-        $conn = mysqli_connect($this->banco['endereco'], $this->banco['login'], $this->banco['senha'], $this->banco['banco']);
-        return mysqli_query($conn,$sql) or die('Could not connect to MySQL: ' . mysqli_error($conn));
-    }
 
     private function getEstrutura(array $dados){
         $estru = new Estrutura();
@@ -60,15 +52,23 @@ class EstruturaDAO{
 
         $dados = $this->conn($sql);
 
-        return $this->getEstrutura($dados);
+        if(!isset($dados)){
+            $estrutura = $this->getEstrutura($dados);
+            return $estrutura;
+        }
     }
 
+    //mecher
     public function procurarProtocolo(String $prot){
-        $sql = "SELECT * FROM chamados WHERE protocolo = " . $prot . ";";
+        $sql = "SELECT * FROM chamados WHERE protocolo = '" . $prot . "';";
 
-        $dados = $this->conn($sql);
 
-        return $this->getEstrutura($dados);
+        $conn = mysqli_connect($this->banco['endereco'], $this->banco['login'], $this->banco['senha'], $this->banco['banco']);
+        $dados = mysqli_query($conn,$sql) or die('Could not connect to MySQL: ' . mysqli_error($conn));
+
+        if(mysqli_num_rows($dados) > 0){
+            return $dados;
+        }
     }
 
     public function remover(int $id){
@@ -78,8 +78,8 @@ class EstruturaDAO{
     }
 
     public function resposta(Estrutura $dados){
-        $sql = "UPDATE chamados SET andamento = 2, resposta = " . $dados->getRetorno()
-                . "WHERE id = " . $dados->getId() . ";";
+        $sql = "UPDATE chamados SET andamento = 2, resposta = '" . $dados->getRetorno()
+                . "' WHERE id = " . $dados->getId() . ";";
 
         return $this->conn($sql);
     }
