@@ -1,20 +1,26 @@
 
         <?php
-        require_once("../php/dao/estruturaDAO.php");
+        require_once("../php/dao/protocoloDAO.php");
         require_once("../php/model/estrutura.php");
 
         $protocolo = $_GET['protocolo'];
         
-        $estrudao = new EstruturaDAO();
+        $estrudao = new protocoloDAO();
 
-        $dados = $estrudao->procurarProtocolo($protocolo);
+        $dados = $estrudao->procuraProt($protocolo);
 
-        if($dados){
-            echo "tem sim <br>";
-            $oi = mysqli_fetch_array($dados);
-            echo $oi["sala"];
-        } else{
-            echo "tem nao";
+        var_dump($dados);
+
+        if(isset($dados[0]['problema'])){
+            echo "é um chamado <br>";
+            echo $dados[0]['problema'];
+        } 
+        elseif (isset($dados['conteudo'])){
+            echo "é uma ouvidoria <br>";
+            echo $dados[0]['conteudo'] . "aa";
+        } 
+        else {
+            echo "erro 404";
         }
         
         /*

@@ -1,14 +1,24 @@
 <?php
+include_once("../database.php");
+require_once("DAO.php");
 
-trait DAO{
+abstract class DAO{
     private $banco;
 
     public function __construct(){
         $this->banco = Database::$db;
     }
     
-    private function conn(String $sql){
+    protected function conn(String $sql){
         $conn = mysqli_connect($this->banco['endereco'], $this->banco['login'], $this->banco['senha'], $this->banco['banco']);
-        return mysqli_query($conn,$sql) or die('Could not connect to MySQL: ' . mysqli_error($conn));
+        $result = mysqli_query($conn,$sql) or die('Could not connect to MySQL: ' . mysqli_error($conn));
+
+        $dados = [];
+
+        while($row = mysqli_fetch_assoc($result)){
+            $dados[] = $row;
+        }
+
+        return $dados;
     }
 }

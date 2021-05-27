@@ -2,8 +2,7 @@
     include_once("../database.php");
     require_once("DAO.php");
 
-class EstruturaDAO{
-    use DAO;
+class EstruturaDAO extends DAO{
     
 
     private function getEstrutura(array $dados){
@@ -62,11 +61,9 @@ class EstruturaDAO{
     public function procurarProtocolo(String $prot){
         $sql = "SELECT * FROM chamados WHERE protocolo = '" . $prot . "';";
 
+        $dados = $this->conn($sql);
 
-        $conn = mysqli_connect($this->banco['endereco'], $this->banco['login'], $this->banco['senha'], $this->banco['banco']);
-        $dados = mysqli_query($conn,$sql) or die('Could not connect to MySQL: ' . mysqli_error($conn));
-
-        if(mysqli_num_rows($dados) > 0){
+        if($dados > 0){
             return $dados;
         }
     }
