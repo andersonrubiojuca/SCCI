@@ -2,31 +2,37 @@
     include_once("../database.php");
     require_once("DAO.php");
 
-class EstruturaDAO extends DAO{
+class OuvidoriaDAO extends DAO{
     
+    private function getOuvidoria(array $dados){
+        $ouvi = new Ouvidoria();
+        $ouvi($dados);
 
-    private function getEstrutura(array $dados){
-        $estru = new Estrutura();
-        $estru($dados);
-
-        return $estru;
+        return $ouvi;
     }
 
-    public function adicionaEstrutura(Estrutura $dados){
+    //mecher
+    public function adicionaOuvidoria(Ouvidoria $dados){
         $tnome = "";
         $vnome = "";
+
+        $temail = "";
+        $vemail = "";
 
         if($dados->getNome()){
             $tnome = "nome, ";
             $vnome = "'" . $dados->getNome() . "', ";
         }
+        if($dados->getEmail()){
+            $temail = "email, ";
+            $vemail = "'" . $dados->getEmail() . "', ";
+        }
 
         $sql = "
-                INSERT INTO chamados($tnome setor, sala, problema, protocolo) VALUES(
+                INSERT INTO ouvidora($tnome $temail conteudo, protocolo) VALUES(
                     $vnome
-                    '" . $dados->getLocal() . "', 
-                    '" . $dados->getSala() . "', 
-                    '" . $dados->getProblema() . "', 
+                    $vemail
+                    '" . $dados->getConteudo() . "', 
                     '" . $dados->getProtocolo() . "'
                 );
             ";
@@ -35,30 +41,30 @@ class EstruturaDAO extends DAO{
     }
 
     public function listarTodos(){
-        $sql = "SELECT * FROM chamados;";
+        $sql = "SELECT * FROM ouvidoria;";
 
         $dados = $this->conn($sql);
 
         foreach($dados as &$dado){
-            $dado = $this->getEstrutura($dado);
+            $dado = $this->getOuvidoria($dado);
         }
 
         return $dados;
     }
 
     public function procurar(int $id){
-        $sql = "SELECT * FROM chamados WHERE id = " . $id . ";";
+        $sql = "SELECT * FROM ouvidoria WHERE id = " . $id . ";";
 
         $dados = $this->conn($sql);
 
         if(!isset($dados)){
-            $estrutura = $this->getEstrutura($dados);
+            $estrutura = $this->getOuvidoria($dados);
             return $estrutura;
         }
     }
 
     public function procurarProtocolo(String $prot){
-        $sql = "SELECT * FROM chamados WHERE protocolo = '$prot';";
+        $sql = "SELECT * FROM ouvidoria WHERE protocolo = '$prot';";
 
         $dados = $this->conn($sql);
 
@@ -68,20 +74,20 @@ class EstruturaDAO extends DAO{
     }
 
     public function remover(int $id){
-        $sql = "DELETE FROM estrutura WHERE id = " . $id . ";";
+        $sql = "DELETE FROM ouvidoria WHERE id = " . $id . ";";
 
         $dados = $this->conn($sql);
     }
 
     public function resposta(Estrutura $dados){
-        $sql = "UPDATE chamados SET andamento = 2, resposta = '" . $dados->getRetorno()
+        $sql = "UPDATE ouvidoria SET andamento = 2, resposta = '" . $dados->getRetorno()
                 . "' WHERE id = " . $dados->getId() . ";";
 
         return $this->conn($sql);
     }
 
     public function termina(Estrutura $dados){
-        $sql = "UPDATE chamados SET andamento = 3, resposta = " . $dados->getRetorno()
+        $sql = "UPDATE ouvidoria SET andamento = 3, resposta = " . $dados->getRetorno()
                 . "WHERE id = " . $dados->getId() . ";";
 
         return $this->conn($sql);
