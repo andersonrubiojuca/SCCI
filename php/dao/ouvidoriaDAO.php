@@ -11,7 +11,6 @@ class OuvidoriaDAO extends DAO{
         return $ouvi;
     }
 
-    //mecher
     public function adicionaOuvidoria(Ouvidoria $dados){
         $tnome = "";
         $vnome = "";
@@ -63,8 +62,9 @@ class OuvidoriaDAO extends DAO{
         }
     }
 
+    //trocar o sql
     public function procurarProtocolo(String $prot){
-        $sql = "SELECT * FROM ouvidoria WHERE protocolo = '$prot';";
+        $sql = "SELECT * FROM ouvidoria WHERE protocolo = $prot;";
 
         $dados = $this->conn($sql);
 

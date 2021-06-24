@@ -1,17 +1,21 @@
 <?php
-require_once("DAO.php");
+require_once('estruturaDAO.php');
+require_once('ouvidoriaDAO.php');
 
-class ProtocoloDAO extends DAO{
+class ProtocoloDAO{
 
     public function procuraProt(String $prot){
-        $sql = "SELECT * from chamados WHERE protocolo LIKE '$prot'
-                UNION ALL
-                SELECT * from ouvidoria WHERE protocolo LIKE '$prot' ";
-
-        $dados = $this->conn($sql);
-
-        if($dados > 0){
+        $estrutura = new EstruturaDAO();
+        $dados = $estrutura->procurarProtocolo($prot);
+        
+        if(isset($dados[0]['problema'])){
             return $dados;
         }
+        
+        $ouvidoria = new OuvidoriaDAO();
+        $dados = $ouvidoria->procurarProtocolo($prot);
+        
+        if(isset($dados[0]['conteudo']))
+            return $dados;
     }
 }

@@ -5,9 +5,9 @@
 
         $protocolo = $_GET['protocolo'];
         
-        $estrudao = new protocoloDAO();
+        $protDAO = new protocoloDAO();
 
-        $dados = $estrudao->procuraProt($protocolo);
+        $dados = $protDAO->procuraProt($protocolo);
 
         var_dump($dados);
 
@@ -15,9 +15,9 @@
             echo "é um chamado <br>";
             echo $dados[0]['problema'];
         } 
-        elseif (isset($dados['conteudo'])){
+        elseif (isset($dados[0]['conteudo'])){
             echo "é uma ouvidoria <br>";
-            echo $dados[0]['conteudo'] . "aa";
+            echo $dados[0]['conteudo'];
         } 
         else {
             echo "erro 404";
