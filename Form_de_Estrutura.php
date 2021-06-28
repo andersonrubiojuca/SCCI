@@ -12,15 +12,15 @@ include 'php/cabecalho.php';
                     <input type="text" class="form-control" id="nome" 
                            name="nome">
                     <label for="setor">Setor</label>
-                    <select name="setor" id="setor" class="form-control">
+                    <select name="setor" id="setor" class="form-control" required>
                         <option>Consultório</option>
                         <option>Internação</option>
                         <option>Pronto Socorro</option>
                     </select>
                     <label for="sala">Em qual sala*</label>
-                    <input type="text" class="form-control" name="sala" id="sala">
+                    <input type="text" class="form-control" name="sala" id="sala" required>
                     <label for="problema">Diga-nos qual o problema*</label>
-                        <textarea name="problema" id="problema" class="form-control" cols="30" rows="10"></textarea>
+                        <textarea name="problema" id="problema" class="form-control" cols="30" rows="10" required></textarea>
                     <input type="hidden" name="tipo" value="estrutura">
                 <span class="pequeno">* - Campos Obrigatórios</span>
                 </fieldset>

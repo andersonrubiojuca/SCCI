@@ -9,18 +9,14 @@
 
         $dados = $protDAO->procuraProt($protocolo);
 
-        var_dump($dados);
-
         if(isset($dados[0]['problema'])){
-            echo "é um chamado <br>";
-            echo $dados[0]['problema'];
+            include_once('estrutura.php');
         } 
         elseif (isset($dados[0]['conteudo'])){
-            echo "é uma ouvidoria <br>";
-            echo $dados[0]['conteudo'];
+            include_once('ouvidoria.php');
         } 
         else {
-            echo "erro 404";
+            echo"<script language='javascript' type='text/javascript'>alert('protocolo incorreto!');window.close();</script>";
         }
         
         /*
