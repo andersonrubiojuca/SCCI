@@ -28,7 +28,7 @@ class OuvidoriaDAO extends DAO{
         }
 
         $sql = "
-                INSERT INTO ouvidora($tnome $temail conteudo, protocolo) VALUES(
+                INSERT INTO ouvidoria($tnome $temail conteudo, protocolo) VALUES(
                     $vnome
                     $vemail
                     '" . $dados->getConteudo() . "', 
@@ -62,9 +62,8 @@ class OuvidoriaDAO extends DAO{
         }
     }
 
-    //trocar o sql
     public function procurarProtocolo(String $prot){
-        $sql = "SELECT * FROM ouvidoria WHERE protocolo = $prot;";
+        $sql = "SELECT * FROM ouvidoria WHERE protocolo = '$prot';";
 
         $dados = $this->conn($sql);
 

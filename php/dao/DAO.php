@@ -15,8 +15,10 @@ abstract class DAO{
 
         $dados = [];
 
-        while($row = mysqli_fetch_assoc($result)){
-            $dados[] = $row;
+        if(!is_bool($result)){
+            while($row = mysqli_fetch_assoc($result)){
+                $dados[] = $row;
+            }
         }
 
         return $dados;

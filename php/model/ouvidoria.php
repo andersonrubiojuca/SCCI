@@ -12,9 +12,11 @@ class Ouvidoria {
     public function __invoke(array $dados){
         if(isset($dados['id']))
             $this->id = $dados['id'];
-
-        $this->nome = $dados['nome'];
+        if(isset($dados['nome']))
+            $this->nome = $dados['nome'];
+        if(isset($dados['email']))
         $this->email = $dados['email'];
+
         $this->conteudo = $dados['conteudo'];
 
         if(isset($dados['protocolo']))
