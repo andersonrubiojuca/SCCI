@@ -56,10 +56,8 @@ class OuvidoriaDAO extends DAO{
 
         $dados = $this->conn($sql);
 
-        if(!isset($dados)){
-            $estrutura = $this->getOuvidoria($dados);
-            return $estrutura;
-        }
+        if(array_key_exists(0, $dados))
+            return $this->getOuvidoria($dados[0]);
     }
 
     public function procurarProtocolo(String $prot){
@@ -67,9 +65,8 @@ class OuvidoriaDAO extends DAO{
 
         $dados = $this->conn($sql);
 
-        if($dados > 0){
-            return $dados;
-        }
+        if(array_key_exists(0, $dados))
+            return $this->getOuvidoria($dados[0]);
     }
 
     public function remover(int $id){

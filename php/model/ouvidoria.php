@@ -2,11 +2,11 @@
 
 class Ouvidoria {
     private int $id;
-    private String $nome,
-        $email,
+    private ?String $nome = null,
+        $email = null,
         $conteudo,
         $protocolo,
-        $retorno,
+        $retorno = null,
         $andamento;
 
     public function __invoke(array $dados){

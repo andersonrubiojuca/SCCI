@@ -3,11 +3,11 @@
 class Estrutura{
     private int $id,
         $sala;
-    private String $nome,
+    private ?String $nome = null,
         $local,
         $problema,
         $protocolo,
-        $retorno,
+        $retorno = null,
         $andamento;
     
     // eu nao gosto de forçar um objeto a ter todos os atributos,

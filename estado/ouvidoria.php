@@ -10,14 +10,14 @@
         <link rel="icon" type="image/ico" href="../imagens/icone.ico">
         
         <?php
-            $ouvidoria = $dados[0];
+            $ouvidoria = $dados;
 
-            if(!isset($ouvidoria['nome']))
-                $ouvidoria['nome'] = "Anônimo";
-            if(!isset($ouvidoria['email']))
-                $ouvidoria['email'] = "anônimo@anonimo.com";
-            if(!isset($estrutura['retorno']))
-                $ouvidoria['retorno'] = "Aguarde o Retorno.";
+            if($ouvidoria->getNome() == null)
+                $ouvidoria->setNome("Anônimo");
+            if($ouvidoria->getEmail() == null)
+                $ouvidoria->setEmail("anônimo@anonimo.com");
+            if($ouvidoria->getRetorno() == null)
+                $ouvidoria->setRetorno("Aguarde o Retorno.");
         
         ?>
     </head>
@@ -27,13 +27,13 @@
         <div class="col-lg-12">
             <label>Nome</label>
             <input type="text" class="form-control" id="nome" 
-                   name="nome" value="<?= $ouvidoria["nome"]?>" disabled>
+                   name="nome" value="<?= $ouvidoria->getNome()?>" disabled>
             <label>E-mail</label>
-            <input type="email" class="form-control" id="email" name="email" value="<?= $ouvidoria["email"]?>" disabled>
+            <input type="email" class="form-control" id="email" name="email" value="<?= $ouvidoria->getEmail()?>" disabled>
             <label>Sugestão/Reclamação</label>
-            <textarea name="conteudo" id="conteudo" rows="4" cols="50" class="form-control" disabled><?= $ouvidoria["conteudo"]?></textarea>
+            <textarea name="conteudo" id="conteudo" rows="4" cols="50" class="form-control" disabled><?= $ouvidoria->getConteudo()?></textarea>
             <label>Resposta</label>
-            <textarea name="resposta" id="resposta" rows="1" cols="50" class="form-control" disabled><?= $ouvidoria["retorno"]?></textarea>
+            <textarea name="resposta" id="resposta" rows="1" cols="50" class="form-control" disabled><?= $ouvidoria->getRetorno()?></textarea>
                 <div class="row">
                 <div class="col-lg-5"></div>
                 <div class="col-lg-4">

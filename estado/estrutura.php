@@ -10,13 +10,10 @@
         <link rel="icon" type="image/ico" href="../imagens/icone.ico">
         
         <?php
-            $estrutura = $dados[0];
+            $estrutura = $dados;
             
-            if(!isset($estrutura['nome']))
-                $estrutura['nome'] = "Anônimo";
-            
-            if(!isset($estrutura['retorno']))
-                $estrutura['retorno'] = "Aguarde o Retorno.";
+            if($estrutura->getNome() == null)
+                $estrutura->setNome("Anônimo");
                        
         ?>  
         
@@ -28,19 +25,19 @@
             <fieldset>
                     <legend><b>Qual foi o problema:</b></legend>
                     <label for="nome">Nome <span style="color: red; font-size: 70%;">(opcional)</span></label>
-                    <input type="text" class="form-control" id="nome" value="<?= $estrutura['nome'] ?>"
+                    <input type="text" class="form-control" id="nome" value="<?= $estrutura->getNome() ?>"
                            disabled name="nome">
                     <label for="setor">Setor</label>
                     <select name="setor" id="setor" class="form-control" disabled>
-                        <option><?= $estrutura['setor'] ?></option>
+                        <option><?= $estrutura->getLocal() ?></option>
                     </select>
                     <label for="sala">Em qual sala*</label>
-                    <input type="text" class="form-control" name="sala" id="sala" value="<?= $estrutura['sala'] ?>" disabled>
+                    <input type="text" class="form-control" name="sala" id="sala" value="<?= $estrutura->getSala() ?>" disabled>
                     <label for="problema">Diga-nos qual o problema*</label>
                         <textarea name="problema" id="problema" class="form-control" cols="30" rows="8" 
-                        disabled><?= $estrutura['problema'] ?></textarea>
+                        disabled><?= $estrutura->getProblema() ?></textarea>
                     <label>Resposta</label>
-                        <textarea name="resposta" id="resposta" rows="1" cols="50" class="form-control" disabled><?= $estrutura["retorno"]?></textarea>
+                        <textarea name="resposta" id="resposta" rows="1" cols="50" class="form-control" disabled><?= $estrutura->getRetorno()?></textarea>
                     <button type="button" class="btn btn-default navbar-btn" onclick="window.close()">
                         Sair
                     </button>

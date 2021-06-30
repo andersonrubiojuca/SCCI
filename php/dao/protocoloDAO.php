@@ -8,14 +8,14 @@ class ProtocoloDAO{
         $estrutura = new EstruturaDAO();
         $dados = $estrutura->procurarProtocolo($prot);
         
-        if(isset($dados[0]['problema'])){
+        if(is_a($dados, "Estrutura")){
             return $dados;
         }
         
         $ouvidoria = new OuvidoriaDAO();
         $dados = $ouvidoria->procurarProtocolo($prot);
         
-        if(isset($dados[0]['conteudo']))
+        if(is_a($dados, "Ouvidoria"))
             return $dados;
     }
 }

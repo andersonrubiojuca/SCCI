@@ -1,42 +1,21 @@
 
-        <?php
-        require_once("../php/dao/protocoloDAO.php");
-        require_once("../php/model/estrutura.php");
+<?php
+require_once("../php/dao/protocoloDAO.php");
+require_once("../php/model/estrutura.php");
+require_once("../php/model/ouvidoria.php");
 
-        $protocolo = $_GET['protocolo'];
-        
-        $protDAO = new protocoloDAO();
+$protocolo = $_GET['protocolo'];
 
-        $dados = $protDAO->procuraProt($protocolo);
+$protDAO = new protocoloDAO();
 
-        if(isset($dados[0]['problema'])){
-            include_once('estrutura.php');
-        } 
-        elseif (isset($dados[0]['conteudo'])){
-            include_once('ouvidoria.php');
-        } 
-        else {
-            echo"<script language='javascript' type='text/javascript'>alert('protocolo incorreto!');window.close();</script>";
-        }
-        
-        /*
-        if($autenticacao == 1){
-            $sql = mysqli_query($conn, "SELECT * FROM `estrutura` WHERE `protocolo` = '" . $protocolo . "'");
-            if ($sql){
-                include 'estrutura.php';
-            }
-            else {
-                 echo"<script language='javascript' type='text/javascript'>alert('protocolo incorreto!');window.close();</script>";
-            }
-        } elseif ($autenticacao == 2) {
-            $sql = mysqli_query($conn, "SELECT * FROM `ouvidoria` WHERE `protocolo` = '" . $protocolo . "'");
-            if ($sql){
-                include 'ouvidoria.php';
-            }
-            else {
-                 echo"<script language='javascript' type='text/javascript'>alert('protocolo incorreto!');window.close();</script>";
-            }
-        } else {
-            echo"<script language='javascript' type='text/javascript'>alert('protocolo incorreto!');window.close();</script>";
-        }
-        */
+$dados = $protDAO->procuraProt($protocolo);
+
+if(is_a($dados, "Estrutura")){
+    include_once('estrutura.php');
+} 
+elseif(is_a($dados, "Ouvidoria")){
+    include_once('ouvidoria.php');
+} 
+else {
+    echo"<script language='javascript' type='text/javascript'>alert('Número do protocolo incorreto!');window.close();</script>";
+}
