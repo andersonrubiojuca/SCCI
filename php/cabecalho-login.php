@@ -5,29 +5,26 @@
         <meta charset="utf-8"> 
         <meta name="viewport" content="width=device-widh">
         <link href="../css/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="../css/padrao.min.css">
+        <link rel="stylesheet" href="../css/padrao.css">
         <link rel="icon" type="image/ico" href="../imagens/icone.ico">
         
         <?php print @$cabecalho_css; 
         print @$cabecalho_algomais;
-        if(!isset($_SESSION)) {
-                    session_start();
-                }
-        if(!isset($_SESSION['login'])){
-                 session_destroy();
-                 header("location:../index.php");
-                                  exit();
-             }
+        
+        require_once('model/login.php');
+        include_once('middleware/session.php');
         ?>
         
     </head>
 <body>
-        
     <header class="container">
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-8 col-md-8">
             <h1><img src="../imagens/logo.png" alt="Oswaldo Aranha"/></h1> 
             <p></p>
+            </div>
+            <div class="col-lg-4 col-md-4 bem-vindo">
+                <p>Bem vindo <?= $_SESSION['login']->getNome() ?></p>
             </div>
             </div>
     </header>

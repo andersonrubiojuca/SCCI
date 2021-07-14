@@ -2,6 +2,7 @@
 $cabecalho_title = "Ver Contas";
 include 'cabecalho-login.php';
 $dados = $_SESSION;
+    privilegio(1);
 
     $conn = mysqli_connect("127.0.0.1", "root", "", "feedback");
     
@@ -14,7 +15,7 @@ $dados = $_SESSION;
     $result = mysqli_query($conn, "SELECT * FROM `login`");
     $sql = mysqli_fetch_array($result);
     
-    function privilegio($priv){
+    function privilegioo($priv){
         if($priv == 1){
             return 'Administrador';
         } elseif($priv == 2){
@@ -46,7 +47,7 @@ $dados = $_SESSION;
         echo '<tr>';
         echo '<td>' . $sql['Nome'] . '</td>';
         echo '<td>' . $sql['Login'] . '</td>';
-        echo '<td>' . privilegio($sql['privilegio']) . '</td>';
+        echo '<td>' . privilegioo($sql['privilegio']) . '</td>';
         echo '<td><a href="../contas/alt_senha.php?usuario='.$sql['Login'].'" target="_blank">Senha</a></td>';
         echo '<td><a href="../contas/alt_privilegio.php?usuario='.$sql['Login'].'" >Privilégio</a></td>';
         echo '<td><button type="button" onclick="excluir('; echo "'$sql[Login]'";echo ')"><span class="glyphicon glyphicon-ban-circle"></span></button></td>';
@@ -63,7 +64,7 @@ $dados = $_SESSION;
                 Criar Conta</button>
     </form>
             <script>
-            <!-- hide on
+            //<!-- hide on
 
             function popup(popupfile,winheight,winwidth)
             {

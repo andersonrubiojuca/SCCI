@@ -9,10 +9,9 @@
         <link rel="icon" type="image/ico" href="imagens/icone.ico">
         
         
-        <?php
-            if(isset($_SESSION['login'])){
-                session_destroy();
-            }
+        <?php   
+                session_start();
+                $_SESSION = [];
         ?>
     </head>
 <body>

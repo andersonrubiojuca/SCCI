@@ -1,9 +1,11 @@
 <?php
 $cabecalho_title="Ver estrutura";
 include '../php/cabecalho-login.php';
+privilegio(2);
 
 $dados = $_SESSION;
 $tipo = $_GET['tipo'];
+
 
     $conn = mysqli_connect("127.0.0.1", "root", "", "feedback");
     

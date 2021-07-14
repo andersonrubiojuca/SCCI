@@ -2,7 +2,7 @@
     include_once("../database.php");
     require_once("DAO.php");
 
-class loginDAO extends DAO {
+class LoginDAO extends DAO {
 
     private function getLogin(array $dados){
         $login = new Login();
@@ -11,23 +11,23 @@ class loginDAO extends DAO {
         return $login;
     }
 
-    public function entrar(String $login, string $senha){
-        $sql = "SELECT * FROM login where login= '$login';";
+    public function entrar(String $usuario, string $senha){
+        $sql = "SELECT * FROM login where usuario = '$usuario';";
         
         $dados = $this->conn($sql);
 
         if(array_key_exists(0, $dados)){
             $conta = $this->getLogin($dados[0]);
-            if(strcmp($conta->getSenha(), $senha)){
+            if(strcmp($conta->getSenha(), $senha) == 0){
                 return $conta;
             }
         }
     }
 
     public function registrar(Login $login){
-        $sql = "INSERT INTO login(nome, login, senha, privilegio) VALUES(
+        $sql = "INSERT INTO login(nome, usuario, senha, privilegio) VALUES(
             '" . $login->getNome() ; "',
-            '" . $login->getLogin() ; "',
+            '" . $login->getUsuario() ; "',
             '" . $login->getSenha() ; "',
             '" . $login->getPrivilegio() ; "',
         );";

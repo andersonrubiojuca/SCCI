@@ -1,17 +1,13 @@
 <?php
 $cabecalho_title="Ver estrutura";
 include '../php/cabecalho-login.php';
+privilegio(2);
 
 $dados = $_SESSION;
 $tipo = $_GET['tipo'];
 
+
     $conn = mysqli_connect("127.0.0.1", "root", "", "feedback");
-    
-    if($dados['privilegio'] > 2|| !$dados){
-        echo"<script language='javascript' type='text/javascript'>alert('Area Restrita!');</script>";
-        header("location:../php/home.php");
-                                  exit();
-    }
     
     $sqlp = mysqli_query($conn, "SELECT * FROM `estrutura` WHERE `andamento` = ".$tipo);
     $sql = mysqli_fetch_array($sqlp);
