@@ -1,18 +1,14 @@
 <?php
-$cabecalho_title="Ver estrutura";
-include '../php/cabecalho-login.php';
-privilegio(2);
+    require_once('../php/model/estrutura.php');
+    require_once('../php/dao/estruturaDAO.php');
 
-$dados = $_SESSION;
-$tipo = $_GET['tipo'];
+    $cabecalho_title="Ver estrutura";
+    include '../php/cabecalho-login.php';
+    privilegio(2);
 
+    $estruDAO = new EstruturaDAO();
 
-    $conn = mysqli_connect("127.0.0.1", "root", "", "feedback");
-    
-    $sqlp = mysqli_query($conn, "SELECT * FROM `estrutura` WHERE `andamento` = ".$tipo);
-    $sql = mysqli_fetch_array($sqlp);
-
-    $protocolo = $sql['protocolo'];
+    $dados = $estruDAO->andamento($_GET['tipo']);
     
 ?>
 <section class="verificar container">
@@ -29,44 +25,42 @@ $tipo = $_GET['tipo'];
         Terminados
         </button></a>
     <?php
-    if($sql == NULL) {
-        echo '<p><b>Nenhum item aqui!</b></p>';
-    } else {
-        echo '<table>
-        <tr>
-            <td>Nome</td>
-            <td>Problema</td>
-            <td>Protocolo</td>
-            <td>Responder</td>
-        </tr>';
-        
-        echo '<tr>';
-        echo '<td>' . $sql['nome'] . '</td>';
-        echo '<td>' . $sql['problema'] . '</td>';
-        echo '<td>' . $sql['protocolo'] . '</td>';
-        echo <<<EOT
-            <td><a href="#" onClick="window.open('Estado.php?protocolo=$protocolo', 'Estado', 'STATUS=NO, TOOLBAR=NO, LOCATION=NO, DIRECTORIES=NO, RESISABLE=NO, SCROLLBARS=YES, TOP=10, LEFT=10, WIDTH=770, HEIGHT=400')"><button type="button"><span class="glyphicon glyphicon-edit"></span></button></a></td>
-        EOT;
-        echo '</tr>';
-    
-           
-    while ($sql = mysqli_fetch_array($sqlp)){
-        echo '<tr>';
-        echo '<td>' . $sql['nome'] . '</td>';
-        echo '<td>' . $sql['problema'] . '</td>';
-        echo '<td>' . $sql['protocolo'] . '</td>';
-        echo <<<EOT
-            <td><a href="#" onClick="window.open('Estado.php?protocolo=$protocolo', 'Estado', 'STATUS=NO, TOOLBAR=NO, LOCATION=NO, DIRECTORIES=NO, RESISABLE=NO, SCROLLBARS=YES, TOP=10, LEFT=10, WIDTH=770, HEIGHT=400')"><button type="button"><span class="glyphicon glyphicon-edit"></span></button></a></td>
-        EOT;
-        echo '</tr>';
-    }
-    
-    echo '</table>';
-    }
-    mysqli_close($conn)
+    if($dados == NULL):
     ?>
-    <p></p>
+        <p><b>Nenhum item aqui!</b></p>
+    <?php
+    
+    else:
+    ?>
+        <table>
+            <tr>
+                <td>Nome</td>
+                <td>Problema</td>
+                <td>Protocolo</td>
+                <td>Responder</td>
+            </tr>
+    
+    <?php       
+     
+        foreach($dados as $dado):
+    ?>
+            <tr>
+                <td><?= $dado->getNome() ?></td>
+                <td><?= $dado->getProblema() ?></td>
+                <td><?= $dado->getProtocolo() ?></td>
+                <td>
+                    <a href="#" onClick="window.open('Estado.php?protocolo=<?= $dado->getProtocolo() ?>', 'Estado', 'STATUS=NO, TOOLBAR=NO, LOCATION=NO, DIRECTORIES=NO, RESISABLE=NO, SCROLLBARS=YES, TOP=10, LEFT=10, WIDTH=770, HEIGHT=400')"><button type="button"><span class="glyphicon glyphicon-edit"></span></button></a>
+                </td>
+            </tr>
+    <?php 
+    endforeach; 
+    endif;
+    ?>
+    </table>
+
+    <br>
     
 </section>
 <?php
+
 include_once '../php/rodape-adm.php';

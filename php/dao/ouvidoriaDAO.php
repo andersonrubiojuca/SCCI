@@ -69,6 +69,18 @@ class OuvidoriaDAO extends DAO{
             return $this->getOuvidoria($dados[0]);
     }
 
+    public function andamento(int $tipo){
+        $sql = "SELECT * FROM ouvidoria WHERE andamento = $tipo;";
+
+        $dados = $this->conn($sql);
+
+        foreach($dados as &$dado){
+            $dado = $this->getOuvidoria($dado);
+        }
+
+        return $dados;
+    }
+
     public function remover(int $id){
         $sql = "DELETE FROM ouvidoria WHERE id = " . $id . ";";
 

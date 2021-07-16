@@ -1,21 +1,12 @@
 <?php
 $cabecalho_title = "Ver Contas";
 include 'cabecalho-login.php';
-$dados = $_SESSION;
+
+require_once('dao/loginDAO.php');
     privilegio(1);
 
-    $conn = mysqli_connect("127.0.0.1", "root", "", "feedback");
-    
-    
-    if($dados['privilegio'] > 1|| !$dados){
-        echo"<script>alert('Area Restrita!');</script>";
-        header("location:../php/home.php");
-                                  exit();
-    }
-    $result = mysqli_query($conn, "SELECT * FROM `login`");
-    $sql = mysqli_fetch_array($result);
-    
-    function privilegioo($priv){
+    //retorna o privilegio (que esta em numero) em Palavras
+    function privIntToStr($priv){
         if($priv == 1){
             return 'Administrador';
         } elseif($priv == 2){
@@ -24,42 +15,54 @@ $dados = $_SESSION;
             return 'Usuário';
         }
     }
+
+    $loginDAo = new LoginDAO();
+    $dados = $loginDAo->listarTodos();
+    // melhor deixar a conta admin por fora da lista
+    array_shift($dados);
+
 ?>
 <section class="container contas">
     <h2>Configuração de Contas</h2>
     <?php
-    if($sql == NULL) {
-        echo '<p><b>Nenhuma conta!</b></p>';
-    } else {
-        echo '<table>
-        <tr>
-            <td>Nome</td>
-            <td>Login</td>
-            <td>Privilegio</td>
-            <td>Nova Senha</td>
-            <td>Alterar Privilégio</td>
-            <td>Excluir</td>
-        </tr>';
+        if($dados == null):
+    ?>
+        <p><b>Nenhuma Conta!</b></p>
+    <?php
+        else:
+    ?>
+        <table>
+            <tr>
+                <td>Nome</td>
+                <td>Login</td>
+                <td>Privilegio</td>
+                <td>Nova Senha</td>
+                <td>Alterar Privilégio</td>
+                <td>Excluir</td>
+            </tr>
         
     
-           
-    while ($sql = mysqli_fetch_array($result)){
-        echo '<tr>';
-        echo '<td>' . $sql['Nome'] . '</td>';
-        echo '<td>' . $sql['Login'] . '</td>';
-        echo '<td>' . privilegioo($sql['privilegio']) . '</td>';
-        echo '<td><a href="../contas/alt_senha.php?usuario='.$sql['Login'].'" target="_blank">Senha</a></td>';
-        echo '<td><a href="../contas/alt_privilegio.php?usuario='.$sql['Login'].'" >Privilégio</a></td>';
-        echo '<td><button type="button" onclick="excluir('; echo "'$sql[Login]'";echo ')"><span class="glyphicon glyphicon-ban-circle"></span></button></td>';
-        echo '</tr><br>';
-    }
+    <?php
+        foreach($dados as $dado):
+    ?>   
+
+        <tr>
+        <td><?= $dado->getNome() ?></td>
+        <td><?= $dado->getUsuario() ?></td>
+        <td><?=  privIntToStr($dado->getPrivilegio()) ?></td>
+        <td><a href="../contas/alt_senha.php?usuario=<?= $dado->getUsuario() ?>" target="_blank">Senha</a></td>
+        <td><a href="../contas/alt_privilegio.php?usuario=<?= $dado->getUsuario() ?>" >Privilégio</a></td>
+        <td><button type="button" onclick="excluir('<?= $dado->getUsuario() ?>')"><span class="glyphicon glyphicon-ban-circle"></span></button></td>
+        </tr><br>
     
-    echo '</table>';
-    }
-    mysqli_close($conn);
+        <?php
+        endforeach; 
+        endif;
     ?>
+    </table>
+
     <form method="POST" action="../contas/criar.php" target="Criar" onsubmit="window.open('', 'Criar', 'toolbar=0,location=0,status=0,menubar=0,scrollbars=0,resizable=1,width=800,height=400');">
-        <input type="hidden" name="privilegio" id="privilegio" value="<?= $dados['privilegio']?>">
+        <input type="hidden" name="privilegio" id="privilegio" value="<?= getMyPriv()?>">
         <button type="submit" class="btn btn-default navbar-btn">
                 Criar Conta</button>
     </form>

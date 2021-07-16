@@ -20,7 +20,8 @@ abstract class DAO{
                 $dados[] = $row;
             }
         }
-
+        mysqli_close($conn);
+        
         return $dados;
     }
 }

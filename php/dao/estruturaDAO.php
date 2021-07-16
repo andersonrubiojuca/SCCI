@@ -64,6 +64,18 @@ class EstruturaDAO extends DAO{
             return $this->getEstrutura($dados[0]);
     }
 
+    public function andamento(int $tipo){
+        $sql = "SELECT * FROM chamados WHERE andamento = $tipo;";
+
+        $dados = $this->conn($sql);
+
+        foreach($dados as &$dado){
+            $dado = $this->getEstrutura($dado);
+        }
+
+        return $dados;
+    }
+
     public function remover(int $id){
         $sql = "DELETE FROM estrutura WHERE id = " . $id . ";";
 

@@ -17,3 +17,7 @@ function privilegio(int $privilegio){
         header("location:../php/home.php");
     }
 }
+
+function getMyPriv(){
+    return $_SESSION['login']->getPrivilegio();
+}
