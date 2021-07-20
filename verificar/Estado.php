@@ -1,30 +1,20 @@
+<?php
+    require_once("../php/dao/protocoloDAO.php");
+    require_once("../php/model/estrutura.php");
+    require_once("../php/model/ouvidoria.php");
 
-        <?php
+    $protocolo = $_GET['protocolo'];
 
-        $protocolo = $_GET['protocolo'];
-        
-        
-        
-        $conn = mysqli_connect("127.0.0.1", "root", "", "feedback");
-        
-        $autenticacao = substr((string)$protocolo,0,1);
-        
-        if($autenticacao == 1){
-            $sql = mysqli_query($conn, "SELECT * FROM `estrutura` WHERE `protocolo` = '" . $protocolo . "'");
-            if ($sql){
-                include 'estrutura.php';
-            }
-            else {
-                 echo"<script language='javascript' type='text/javascript'>alert('protocolo incorreto!');window.close();</script>";
-            }
-        } elseif ($autenticacao == 2) {
-            $sql = mysqli_query($conn, "SELECT * FROM `ouvidoria` WHERE `protocolo` = '" . $protocolo . "'");
-            if ($sql){
-                include 'ouvidoria.php';
-            }
-            else {
-                 echo"<script language='javascript' type='text/javascript'>alert('protocolo incorreto!');window.close();</script>";
-            }
-        } else {
-            echo"<script language='javascript' type='text/javascript'>alert('protocolo incorreto!');window.close();</script>";
-        }
+    $protDAO = new ProtocoloDAO();
+
+    $dados = $protDAO->procuraProt($protocolo);
+
+    if(is_a($dados, "Estrutura")){
+        include_once('estrutura.php');
+    } 
+    elseif(is_a($dados, "Ouvidoria")){
+        include_once('ouvidoria.php');
+    } 
+    else {
+        echo"<script language='javascript' type='text/javascript'>alert('Número do protocolo incorreto!');window.close();</script>";
+    }

@@ -1,0 +1,12 @@
+.corpo{
+    background: rgba(100,149,237,0.4);
+}
+body{
+    position: absolute;
+    font-family: 'Helvetica ', "Lucida Sans Unicode ", "Lucida Grande", sans-serif;
+    /*float: left;*/
+    top: 15%;
+    left: 15%;
+    background: #F0F8FF;
+
+}

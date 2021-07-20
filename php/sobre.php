@@ -12,7 +12,7 @@ and open the template in the editor.
 <div class="container">
     <div class="row">
         <div class="col-lg-12 sobre">
-            <h2>Sistema de Feedback</h2>
+            <h2>SCCI: Sistema de Controle De Chamados de Infraestrutura</h2>
             <p>Programador: Anderson</p>
 </div>
 </div>

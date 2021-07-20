@@ -15,13 +15,13 @@
     <h2>Lista de problemas de estrutura:</h2>
     <p></p>
     
-    <a href="ver-estrutura.php?tipo=3"><button type="button" class="btn btn-default navbar-btn">
+    <a href="ver-estrutura.php?tipo=3"><button type="button" class="btn btn-danger navbar-btn">
         Não Resolvidos
         </button></a>
-    <a href="ver-estrutura.php?tipo=2"><button type="button" class="btn btn-default navbar-btn">
+    <a href="ver-estrutura.php?tipo=2"><button type="button" class="btn btn-warning navbar-btn">
         Em andamento
         </button></a>
-    <a href="ver-estrutura.php?tipo=1"><button type="button" class="btn btn-default navbar-btn">
+    <a href="ver-estrutura.php?tipo=1"><button type="button" class="btn btn-success navbar-btn">
         Terminados
         </button></a>
     <?php
@@ -49,7 +49,7 @@
                 <td><?= $dado->getProblema() ?></td>
                 <td><?= $dado->getProtocolo() ?></td>
                 <td>
-                    <a href="#" onClick="window.open('Estado.php?protocolo=<?= $dado->getProtocolo() ?>', 'Estado', 'STATUS=NO, TOOLBAR=NO, LOCATION=NO, DIRECTORIES=NO, RESISABLE=NO, SCROLLBARS=YES, TOP=10, LEFT=10, WIDTH=770, HEIGHT=400')"><button type="button"><span class="glyphicon glyphicon-edit"></span></button></a>
+                    <a href="#" onClick="window.open('estado.php?protocolo=<?= $dado->getProtocolo() ?>', 'Estado', 'STATUS=NO, TOOLBAR=NO, LOCATION=NO, DIRECTORIES=NO, RESISABLE=NO, SCROLLBARS=YES, TOP=10, LEFT=10, WIDTH=770, HEIGHT=400')"><button type="button"><span class="glyphicon glyphicon-edit"></span></button></a>
                 </td>
             </tr>
     <?php 

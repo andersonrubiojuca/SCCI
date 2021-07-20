@@ -87,16 +87,16 @@ class OuvidoriaDAO extends DAO{
         $dados = $this->conn($sql);
     }
 
-    public function resposta(Estrutura $dados){
-        $sql = "UPDATE ouvidoria SET andamento = 2, resposta = '" . $dados->getRetorno()
-                . "' WHERE id = " . $dados->getId() . ";";
+    public function resposta(Ouvidoria $dados){
+        $sql = "UPDATE ouvidoria SET andamento = 2, retorno = '" . $dados->getRetorno()
+                . "' WHERE protocolo = '" . $dados->getProtocolo() . "';";
 
         return $this->conn($sql);
     }
 
-    public function termina(Estrutura $dados){
-        $sql = "UPDATE ouvidoria SET andamento = 3, resposta = " . $dados->getRetorno()
-                . "WHERE id = " . $dados->getId() . ";";
+    public function termina(Ouvidoria $dados){
+        $sql = "UPDATE ouvidoria SET andamento = 1, retorno = 'Terminado!'"
+                . "WHERE protocolo = '" . $dados->getProtocolo() . "';";
 
         return $this->conn($sql);
     }

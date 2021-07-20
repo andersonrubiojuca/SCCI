@@ -83,15 +83,15 @@ class EstruturaDAO extends DAO{
     }
 
     public function resposta(Estrutura $dados){
-        $sql = "UPDATE chamados SET andamento = 2, resposta = '" . $dados->getRetorno()
-                . "' WHERE id = " . $dados->getId() . ";";
+        $sql = "UPDATE chamados SET andamento = 2, retorno = '" . $dados->getRetorno()
+                . "' WHERE protocolo = '" . $dados->getProtocolo() . "';";
 
         return $this->conn($sql);
     }
 
     public function termina(Estrutura $dados){
-        $sql = "UPDATE chamados SET andamento = 3, resposta = " . $dados->getRetorno()
-                . "WHERE id = " . $dados->getId() . ";";
+        $sql = "UPDATE chamados SET andamento = 1, retorno = 'Terminado!'"
+                . "WHERE protocolo = '" . $dados->getProtocolo() . "';";
 
         return $this->conn($sql);
     }
