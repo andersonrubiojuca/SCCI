@@ -2,18 +2,20 @@
 
 class Login {
     private ?int $id = null,
-                $privilegio;
-    private String  $nome,
+                $privilegio = null;
+    private ?String  $nome = null,
                     $usuario,
                     $senha;
     
     public function __invoke(array $dados){
         if(isset($dados['id']))
             $this->id = $dados['id'];
-        $this->nome = $dados['nome'];
+        if(isset($dados['nome']))
+            $this->nome = $dados['nome'];
         $this->usuario = $dados['usuario'];
         $this->senha = $dados['senha'];
-        $this->privilegio = $dados['privilegio'];
+        if(isset($dados['privilegio']))
+            $this->privilegio = $dados['privilegio'];
     }
 
     public function setId(int $id){

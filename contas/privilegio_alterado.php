@@ -1,18 +1,20 @@
 <?php
 $cabecalho_title = "Privilegio Alterado";
 include '../php/cabecalho-login.php';
-$dados = $_SESSION;
+require_once('../php/model/login.php');
+require_once('../php/dao/loginDAO.php');
+
+privilegio(1);
+
 $form = $_POST;
 
-    $conn = mysqli_connect("127.0.0.1", "root", "", "feedback");
+    $login = new Login();
+    $login->setUsuario($form['usuario']);
+    $login->setPrivilegio($form['privilegio']);
     
+    $loginDAO = new LoginDAO();
+    $loginDAO->mudaPrivilegio($login);
     
-    if($dados['privilegio'] > 1|| !$dados){
-        echo"<script>alert('Area Restrita!');</script>";
-        header("location:../php/home.php");
-                                  exit();
-    }
-    $result = mysqli_query($conn, "update `login` set `privilegio` = $form[privilegio] where `Login` = '$form[login]'") or die('Could not connect to MySQL: ' . mysqli_error($conn));
     ?>
     <section class="container">
             <p class="titulo">Privilégio Alterado com Sucesso!</p>
@@ -26,5 +28,4 @@ $form = $_POST;
             </div>
         </section>
 <?php
-mysqli_close($conn);
 include '../php/Rodape.php';

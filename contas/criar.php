@@ -9,16 +9,10 @@
         <link href="css/Login.css" rel="stylesheet" type="text/css"/>
         <link rel="icon" type="image/ico" href="../imagens/icone.ico">
         <?php
+        require_once('../php/model/login.php');
+        include_once('../php/middleware/session.php');
 
-        $dados = $_POST;
-
-            $conn = mysqli_connect("127.0.0.1", "root", "", "feedback");
-
-                if($dados['privilegio'] > 1|| !$dados){
-        echo"<script language='javascript' type='text/javascript'>alert('Area Restrita!');</script>";
-        header("location:../php/home.php");
-                                  exit();
-    }
+        privilegio(1);
         ?>
     </head>
     <body>
@@ -30,9 +24,9 @@
                         <label for="nome">Nome</label>
                         <input type="text" class="form-control" id="nome" 
                                name="nome" required>
-                        <label for="login">login</label>
-                        <input type="text" class="form-control" id="login" 
-                           name="login" required>
+                        <label for="usuario">Usuario</label>
+                        <input type="text" class="form-control" id="usuario" 
+                           name="usuario" required>
                         <label for="senha">senha</label>
                         <input type="password" class="form-control" id="senha"
                                name="senha" required>

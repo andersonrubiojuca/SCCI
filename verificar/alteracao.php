@@ -33,7 +33,7 @@
                     $ouvidoria->setProtocolo($dados['protocolo']);
 
                     $ouviDAO = new OuvidoriaDAO();
-                    $ouviDAO->resposta($ouvidoria);
+                    $ouviDAO->resposta($ouvidoria, 2);
                 }
                 $terminar = 'Alterado';
             }
@@ -47,10 +47,11 @@
                 }
                 if($dados['tipo'] = 'ouvidoria'){
                     $ouvidoria = new Ouvidoria();
+                    $ouvidoria->setRetorno($dados['resposta']);
                     $ouvidoria->setProtocolo($dados['protocolo']);
 
                     $ouviDAO = new OuvidoriaDAO();
-                    $ouviDAO->termina($ouvidoria);
+                    $ouviDAO->resposta($ouvidoria, 1);
                 }
                 $terminar = 'Terminado';
             }

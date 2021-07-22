@@ -50,7 +50,7 @@ require_once('dao/loginDAO.php');
         <td><?= $dado->getNome() ?></td>
         <td><?= $dado->getUsuario() ?></td>
         <td><?=  privIntToStr($dado->getPrivilegio()) ?></td>
-        <td><a href="../contas/alt_senha.php?usuario=<?= $dado->getUsuario() ?>" target="_blank">Senha</a></td>
+        <td><a href="#" onclick="window.open('../contas/alt_senha.php?usuario=<?= $dado->getUsuario() ?>', 'Senha', 'STATUS=NO, TOOLBAR=NO, LOCATION=NO, DIRECTORIES=NO, RESISABLE=NO, SCROLLBARS=YES, TOP=10, LEFT=10, WIDTH=770, HEIGHT=400')">Senha</a></td>
         <td><a href="../contas/alt_privilegio.php?usuario=<?= $dado->getUsuario() ?>" >Privilégio</a></td>
         <td><button type="button" onclick="excluir('<?= $dado->getUsuario() ?>')"><span class="glyphicon glyphicon-ban-circle"></span></button></td>
         </tr><br>
@@ -78,7 +78,7 @@ require_once('dao/loginDAO.php');
             
             function excluir(s){
                 if (window.confirm("Você realmente quer excluir?")) { 
-                  window.open("../contas/excluir.php?usuario=" + s);
+                  window.location.href = "../contas/excluir.php?usuario=" + s;
                 }
             }
         </script>

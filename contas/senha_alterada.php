@@ -10,19 +10,23 @@
         <link rel="icon" type="image/ico" href="../imagens/icone.ico">
         
         <script src="../javascript/less.js" type="text/javascript"></script>
-            <?php
+        <?php
+            require_once('../php/model/login.php');
+            require_once('../php/dao/loginDAO.php');
 
             $dados = $_POST;
+            $login = new Login();
+            $login($dados);
+            $login->setSenha($dados['novasenha']);
 
-            $conn = mysqli_connect("127.0.0.1", "root", "", "feedback");
-            
-        if($dados['novasenha'] != $dados['senhanovamente']){
-            echo "<script>alert('Senhas diferentes, revise-as!')</script>";
-            echo "<script>javascript:history.back(-1)</script>";        
-        } else {
-             $result = mysqli_query($conn, "update `login` set `Senha` = '$dados[novasenha]' where `Login` = '$dados[login]'") or die('Could not connect to MySQL: ' . mysqli_error($conn));
-}
-            ?>
+            $loginDAO = new LoginDAO();
+            if($dados['novasenha'] != $dados['senhanovamente']){
+                echo "<script>alert('Senhas diferentes, revise-as!')
+                    javascript:history.back(-1)</script>"; 
+            } else{
+                $loginDAO->mudaSenha($login);
+            }
+        ?>
     </head>
     <body>
         <section class="corpo container">

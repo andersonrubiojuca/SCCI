@@ -1,5 +1,4 @@
 <?php
-    include_once("../database.php");
     require_once("DAO.php");
 
 class EstruturaDAO extends DAO{

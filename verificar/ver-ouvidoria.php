@@ -49,7 +49,7 @@
                 <td><?= $dado->getProtocolo() ?></td>
                 <td><?= substr_replace($dado->getConteudo(), (strlen($dado->getConteudo()) > $max ?'...':''), $max) ?></td>
                 <td><a href="#" onClick="window.open('estado.php?protocolo=<?= $dado->getProtocolo()?>', 'Estado', 'STATUS=NO, TOOLBAR=NO, LOCATION=NO, DIRECTORIES=NO, RESISABLE=NO, SCROLLBARS=YES, TOP=10, LEFT=10, WIDTH=770, HEIGHT=400')"><button type="button"><span class="glyphicon glyphicon-edit"></span></button></a></td>
-                <td>Em Breve</td>
+                <td><a href="agradecimento.php?protocolo=<?= $dado->getProtocolo()?>"><button type="button"><span class="glyphicon glyphicon-thumbs-up"></span></button></a></td>
             </tr>
     <?php
         endforeach; 

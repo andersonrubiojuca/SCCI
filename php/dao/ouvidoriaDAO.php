@@ -1,5 +1,4 @@
 <?php
-    include_once("../database.php");
     require_once("DAO.php");
 
 class OuvidoriaDAO extends DAO{
@@ -87,16 +86,10 @@ class OuvidoriaDAO extends DAO{
         $dados = $this->conn($sql);
     }
 
-    public function resposta(Ouvidoria $dados){
-        $sql = "UPDATE ouvidoria SET andamento = 2, retorno = '" . $dados->getRetorno()
+    //diferente dos chamados é melhor ter apenas uma função
+    public function resposta(Ouvidoria $dados, int $andamento){
+        $sql = "UPDATE ouvidoria SET andamento = $andamento, retorno = '" . $dados->getRetorno()
                 . "' WHERE protocolo = '" . $dados->getProtocolo() . "';";
-
-        return $this->conn($sql);
-    }
-
-    public function termina(Ouvidoria $dados){
-        $sql = "UPDATE ouvidoria SET andamento = 1, retorno = 'Terminado!'"
-                . "WHERE protocolo = '" . $dados->getProtocolo() . "';";
 
         return $this->conn($sql);
     }

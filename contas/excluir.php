@@ -1,21 +1,21 @@
 <?php
-$cabecalho_title = "Excluido";
-include '../php/cabecalho-login.php';
-$dados = $_SESSION;
-$form = $_GET['usuario'];
+    $cabecalho_title = "Excluido";
+    include '../php/cabecalho-login.php';
+    require_once('../php/model/login.php');
+    require_once('../php/dao/loginDAO.php');
 
-    $conn = mysqli_connect("127.0.0.1", "root", "", "feedback");
-    
-    if($dados['privilegio'] > 1|| !$dados){
-        echo"<script>alert('Area Restrita!');</script>";
-        header("location:../php/home.php");
-                                  exit();
+    privilegio(1);
+
+    $loginDAO = new LoginDAO();
+    $login = $loginDAO->jaExiste($_GET['usuario']);
+
+    if($login){
+        $loginDAO->remover($login->getId());
     }
-    $result = mysqli_query($conn, "delete from `login` where `Login`= '$form'");
     
 ?>
 <section class="container">
-            <p class="titulo">Conta excluída com Sucesso! <?= $form?></p>
+            <p class="titulo">Conta excluída com Sucesso! <?= $login->getUsuario() ?></p>
             <div class="row">
                 <div class="col-lg-5"></div>
                 <div class="col-lg-4">
@@ -26,5 +26,4 @@ $form = $_GET['usuario'];
             </div>
         </section>
 <?php
-mysqli_close($conn);
 include '../php/Rodape.php';

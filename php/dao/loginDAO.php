@@ -1,5 +1,4 @@
 <?php
-    include_once("../database.php");
     require_once("DAO.php");
 
 class LoginDAO extends DAO {
@@ -26,10 +25,10 @@ class LoginDAO extends DAO {
 
     public function registrar(Login $login){
         $sql = "INSERT INTO login(nome, usuario, senha, privilegio) VALUES(
-            '" . $login->getNome() ; "',
-            '" . $login->getUsuario() ; "',
-            '" . $login->getSenha() ; "',
-            '" . $login->getPrivilegio() ; "',
+            '" . $login->getNome() . "',
+            '" . $login->getUsuario() . "',
+            '" . $login->getSenha() . "',
+            '" . $login->getPrivilegio() . "'
         );";
         
         $this->conn($sql);
@@ -56,14 +55,29 @@ class LoginDAO extends DAO {
             return $this->getLogin($dados[0]);
     }
 
+    public function jaExiste(String $usuario){
+        $sql = "SELECT * FROM login WHERE usuario = '" . $usuario . "';";
+
+        $dados = $this->conn($sql);
+
+        if(array_key_exists(0, $dados))
+            return $this->getLogin($dados[0]);
+    }
+
     public function remover(int $id){
         $sql = "DELETE FROM login WHERE id = " . $id . ";";
 
         $dados = $this->conn($sql);
     }
 
-    public function mudaPrivilegio(int $privilegio, Login $login){
-        $sql = "UPDATE login SET privilegio = $privilegio WHERE id = " . $login->getId() . ";";
+    public function mudaPrivilegio(Login $login){
+        $sql = "UPDATE login SET privilegio = " . $login->getPrivilegio() . " WHERE usuario = '" . $login->getUsuario() . "';";
+
+        return $this->conn($sql);
+    }
+
+    public function mudaSenha(Login $login){
+        $sql = "UPDATE login SET senha = '" . $login->getSenha() . "' WHERE usuario = '" . $login->getUsuario() . "';";
 
         return $this->conn($sql);
     }
